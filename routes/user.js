@@ -97,7 +97,6 @@ exports.delete = function (req, res) {
       'deleted': user
     };
 
-    console.log(result);
     res.send(result);
     return;
   });
