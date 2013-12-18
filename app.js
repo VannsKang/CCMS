@@ -54,6 +54,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback () {
 
   app.get('/', routes.index);
+  app.get('/login', routes.login);
   app.get('/users', user.list);
 
   app.post('/users/create', user.create);
