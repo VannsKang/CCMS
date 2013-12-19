@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 
-{% block title %}My Page{% endblock %}
+{% block title %} {{ title }} {% endblock %}
 
 {% block head %}
   {% parent %}
@@ -10,7 +10,9 @@
     }
   </style>
   <script>
-  $(function() {
+  $(document).ready(function() {
+
+    // Initialize date picker
     var $datePicker = $( "#datepicker" );
     $datePicker.datepicker({
       'dateFormat': 'yy년 mm월 dd일'
