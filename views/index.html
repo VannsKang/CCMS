@@ -11,10 +11,12 @@
   </style>
   <script>
   $(function() {
-    $( "#datepicker" ).datepicker();
-    $( "#format" ).change(function() {
-      $( "#datepicker" ).datepicker( "option", "dateFormat", $( this ).val() );
+    var $datePicker = $( "#datepicker" );
+    $datePicker.datepicker({
+      'dateFormat': 'yy년 mm월 dd일'
     });
+    $datePicker.datepicker( "setDate", new Date());
+
   });
   </script>
 
@@ -22,8 +24,6 @@
 
 {% block content %}
 <section>
-
-
   <div class="container">
 
     <!-- 사이트 타이틀 -->
@@ -82,18 +82,18 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">거래 내역 입력</h4>
               </div>
-              <div class="modal-body">                            
+              <div class="modal-body">
 
                 <!-- 첫째 줄 -->
-                <div class="row">                                  
+                <div class="row">
                   <!-- 날짜 입력 -->
-                  <div class="col-md-6">                    
+                  <div class="col-md-6">
                     <p>
                       <div class="form-group">
                       <label class="control-label text-success">거래 날짜</label>
                       <input type="text" class="form-control input-sm" placeholder="날짜를 입력하세요" id="datepicker" size="30">
                       </div>
-                    </p>                                      
+                    </p>
                   </div>
                   <!-- 날짜 입력 -->
                   <div class="col-md-6">
@@ -101,9 +101,9 @@
                       <div class="form-group">
                         <label class="control-label text-success">카테고리</label>
                         <input type="text" class="form-control input-sm" placeholder="카테고리를 입력하세요">
-                      </div>              
-                    </p>                      
-                  </div>                  
+                      </div>
+                    </p>
+                  </div>
                 </div>
                 <!-- 첫째 줄 -->
 
@@ -114,16 +114,16 @@
                       <div class="form-group">
                         <label class="control-label text-success">냥 주는 이</label>
                         <input type="text" class="form-control input-sm" placeholder="이름을 입력하세요">
-                      </div>              
-                    </p>                      
-                  </div>                
+                      </div>
+                    </p>
+                  </div>
                   <div class="col-md-6">
                     <p>
                       <div class="form-group">
                         <label class="control-label text-success">냥 받는 이</label>
                         <input type="text" class="form-control input-sm" placeholder="이름을 입력하세요">
-                      </div>              
-                    </p>                      
+                      </div>
+                    </p>
                   </div>
 
                 </div>
@@ -134,27 +134,27 @@
                   <div class="form-group">
                     <label class="control-label text-success">거래 내용</label>
                     <input type="text" class="form-control input-sm" placeholder="내용을 입력하세요">
-                  </div>              
-                </p> 
+                  </div>
+                </p>
                 <!-- 거래 내용 -->
 
                 <!-- 현금 입력폼 -->
                 <p>
                   <label class="control-label text-success">거래한 현금</label>
-                  <div class="input-group">                    
+                  <div class="input-group">
                     <input type="text" class="form-control" placeholder="금액을 입력하세요">
                     <span class="input-group-addon">원</span>
-                  </div>                  
+                  </div>
                 </p>
                 <!-- 현금 입력폼 -->
 
                 <!-- 노냥 입력폼 -->
                 <p>
                   <label class="control-label text-success">거래한 노냥</label>
-                  <div class="input-group">                    
+                  <div class="input-group">
                     <input type="text" class="form-control" placeholder="금액을 입력하세요">
                     <span class="input-group-addon">냥</span>
-                  </div>                  
+                  </div>
                 </p>
                 <!-- 노냥 입력폼 -->
 
