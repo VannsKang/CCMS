@@ -4,15 +4,25 @@
 
 {% block head %}
   {% parent %}
-{% endblock %}
-
-{% block content %}
-<section>
   <style>
     #site_logo {
       padding: 30px 30px 30px 30px;
     }
   </style>
+  <script>
+  $(function() {
+    $( "#datepicker" ).datepicker();
+    $( "#format" ).change(function() {
+      $( "#datepicker" ).datepicker( "option", "dateFormat", $( this ).val() );
+    });
+  });
+  </script>
+
+{% endblock %}
+
+{% block content %}
+<section>
+
 
   <div class="container">
 
@@ -30,10 +40,6 @@
 
       <!-- 로그인 및 프로필 섹션 -->
       <div class="col-lg-3">
-
-        <!-- 사이트 로고 -->
-        <img src="https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-prn1/553114_10200774799633662_560161521_n.jpg" alt="nodac_logo" class="img-circle img-responsive" id="site_logo">
-        <!-- 사이트 로고 -->
 
         <!-- 로그인 폼 -->
         <form role="form">
@@ -61,72 +67,105 @@
       <div class="col-lg-7">
 
         <!-- 안내문 -->
-        <div class="alert alert-warning">아래의 폼을 다 채워주신 후 제출하시면 대기 목록에 거래 내역을 추가할 수 있습니다.</div>
+        <p><div class="alert alert-warning text-center" >거래 내역 추가 버튼을 통해 대기 목록에 거래 내역을 추가할 수 있습니다.</div></p>
         <!-- 안내문 -->
 
-        <!-- 노냥 내역 입력폼 -->
-        <div class="row">
+        <!-- 모달 토글 버튼 -->
+        <p><button class="btn btn-default btn-block" data-toggle="modal" data-target="#addCurencyModal">거래 내역 추가</button></p>
+        <!-- 모달 토글 버튼 -->
 
-          <div class="col-xs-2">
-            <div class="input-group input-group-sm">
-              <select class="form-control input-sm" placeholder="월">
-                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
-              </select>
-              <span class="input-group-addon">월</span>
+        <!-- 모달 내용 -->
+        <div class="modal fade" id="addCurencyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header alert alert-success">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">거래 내역 입력</h4>
+              </div>
+              <div class="modal-body">                            
+
+                <!-- 첫째 줄 -->
+                <div class="row">                                  
+                  <!-- 날짜 입력 -->
+                  <div class="col-md-6">                    
+                    <p>
+                      <div class="form-group">
+                      <label class="control-label text-success">거래 날짜</label>
+                      <input type="text" class="form-control input-sm" placeholder="날짜를 입력하세요" id="datepicker" size="30">
+                      </div>
+                    </p>                                      
+                  </div>
+                  <!-- 날짜 입력 -->
+                  <div class="col-md-6">
+                    <p>
+                      <div class="form-group">
+                        <label class="control-label text-success">냥 주는 이</label>
+                        <input type="text" class="form-control input-sm" placeholder="이름을 입력하세요">
+                      </div>              
+                    </p>                      
+                  </div>
+                </div>
+                <!-- 첫째 줄 -->
+
+                <!-- 둘째 줄 -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <p>
+                      <div class="form-group">
+                        <label class="control-label text-success">냥 받는 이</label>
+                        <input type="text" class="form-control input-sm" placeholder="이름을 입력하세요">
+                      </div>              
+                    </p>                      
+                  </div>
+                  <div class="col-md-6">
+                    <p>
+                      <div class="form-group">
+                        <label class="control-label text-success">카테고리</label>
+                        <input type="text" class="form-control input-sm" placeholder="카테고리를 입력하세요">
+                      </div>              
+                    </p>                      
+                  </div>
+                </div>
+                <!-- 둘째 줄 -->
+
+                <!-- 거래 내용 -->
+                <p>
+                  <div class="form-group">
+                    <label class="control-label text-success">거래 내용</label>
+                    <input type="text" class="form-control input-sm" placeholder="내용을 입력하세요">
+                  </div>              
+                </p> 
+                <!-- 거래 내용 -->
+
+                <!-- 현금 입력폼 -->
+                <p>
+                  <label class="control-label text-success">거래한 현금</label>
+                  <div class="input-group">                    
+                    <input type="text" class="form-control" placeholder="금액을 입력하세요">
+                    <span class="input-group-addon">원</span>
+                  </div>                  
+                </p>
+                <!-- 현금 입력폼 -->
+
+                <!-- 노냥 입력폼 -->
+                <p>
+                  <label class="control-label text-success">거래한 노냥</label>
+                  <div class="input-group">                    
+                    <input type="text" class="form-control" placeholder="금액을 입력하세요">
+                    <span class="input-group-addon">냥</span>
+                  </div>                  
+                </p>
+                <!-- 노냥 입력폼 -->
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">그냥 닫기</button>
+                <input class="btn btn-success" type="submit" value="입력하기">
+              </div>
             </div>
-          </div>
-          <div class="col-xs-2">
-            <div class="input-group input-group-sm">
-              <select class="form-control input-sm" placeholder="일">
-                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option><option>28</option><option>29</option><option>30</option><option>31</option>
-              </select>
-              <span class="input-group-addon">일</span>
-            </div>
-          </div>
-          <div class="col-xs-2">
-            <input type="text" class="form-control input-sm" placeholder="냥 주는 이">
-          </div>
-          <div class="col-xs-2">
-            <input type="text" class="form-control input-sm" placeholder="냥 받는 이">
-          </div>
-          <div class="col-xs-2">
-            <input type="text" class="form-control input-sm" placeholder="카테고리">
-          </div>
-          <div class="col-xs-2">
-            <input type="text" class="form-control input-sm" placeholder="내용">
           </div>
         </div>
-        <!-- 두번째 줄 라벨 -->
-        <!-- <div class="row"> -->
-          <!-- <div class="col-xs-12"> -->
-
-          <!-- </div> -->
-        <!-- </div> -->
-        <!-- 두번째 줄 라벨 -->
-
-        <!-- 두번째 줄 입력폼 -->
-        <div class="row">
-          <div class="col-xs-6">
-            <div class="input-group input-group-sm">
-              <input type="text" class="form-control" placeholder="현금">
-              <span class="input-group-addon">원</span>
-            </div>
-          </div>
-          <div class="col-xs-6">
-            <div class="input-group input-group-sm">
-              <input type="text" class="form-control" placeholder="노냥">
-              <span class="input-group-addon">냥</span>
-            </div>
-          </div>
-        </div>
-        <!-- 두번째 줄 입력폼 -->
-        <div class="row">
-          <div class="col-xs-12">
-            <input class="btn btn-default btn-sm btn-block" type="submit" value="제출">
-          </div>
-        </div>
-        <!-- 노냥 내역 입력폼 -->
-
+        <!-- 모달 내용 -->
 
         <!-- 네비게이션 패널 -->
         <ul class="nav nav-tabs" id="currency_flow_chart">
@@ -143,7 +182,7 @@
 
             <!-- 전체 거래 그래표 내용 -->
             <div class="table-responsive">
-              <table class="table table-striped table-hover table-condensed text-center">
+              <table class="table table-striped table-hover table-condensed text-right">
                 <thead>
                   <tr class="success">
                     <td>날짜</td><td>냥 주는 이</td><td>냥 받는 이</td><td>카테고리</td><td>내용</td><td>현금</td><td>냥</td>
@@ -176,7 +215,7 @@
 
             <!-- 개인 거래그래표 내용 -->
             <div class="table-responsive">
-              <table class="table table-striped table-hover table-condensed text-center">
+              <table class="table table-striped table-hover table-condensed text-right">
                 <thead>
                   <tr class="success">
                     <td>이름</td><td>도움 받고 노냥 지출</td><td>도움 주고 노냥 획득</td><td>거래 횟수</td><td>현금</td><td>남은 노냥</td>
@@ -208,7 +247,7 @@
 
             <!-- 대기 거래 그래표 내용 -->
             <div class="table-responsive">
-              <table class="table table-striped table-hover table-condensed text-center">
+              <table class="table table-striped table-hover table-condensed text-right">
                 <thead>
                   <tr class="success">
                     <td>날짜</td><td>냥 주는 이</td><td>냥 받는 이</td><td>카테고리</td><td>내용</td><td>현금</td><td>냥</td><td>확인</td>
