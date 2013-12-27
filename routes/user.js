@@ -28,6 +28,33 @@ exports.list = function (req, res) {
   });
 };
 
+exports.listAll = function (req, res) {
+  // if ( !req.session.user_id ) {
+  //   var result = {
+  //     'result': 'error',
+  //     'errno': 'NOT_LOGGED_IN',
+  //     'errmsg': '로그인 되어있지 않아요. 먼저 로그인을 하셔야죠'
+  //   };
+  //   res.send(result);
+  //   return;
+  // }
+
+  User.find({}, function (err, users) {
+    if (err) {
+      res.send(err);
+      return;
+    }
+
+    var result = {
+      'result': 'success',
+      'data': users
+    };
+
+    res.send(result);
+    return;
+  });
+};
+
 exports.create = function (req, res) {
   var object = {
     'name': req.body.name,

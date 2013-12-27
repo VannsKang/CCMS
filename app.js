@@ -18,6 +18,7 @@ var swig = require('swig');
 var routes = require('./routes');
 var user = require('./routes/user');
 var form = require('./routes/form');
+var category = require('./routes/category');
 
 // Utilities
 var config = require('./config');
@@ -68,6 +69,7 @@ db.once('open', function callback () {
   app.get('/login', routes.login);
 
   app.get('/users', user.list);
+  app.get('/users/all', user.listAll);
   app.post('/users/create', user.create);
   app.post('/users/edit', user.edit);
   app.post('/users/delete', user.delete);
@@ -75,6 +77,9 @@ db.once('open', function callback () {
 
   app.get('/form/login', form.login);
   app.get('/form/user', form.user);
+
+  app.post('/category/create', category.create);
+  app.get('/category/all', category.listAll);
 
   http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));

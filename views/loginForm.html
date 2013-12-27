@@ -18,10 +18,8 @@
 </form>
 <!-- 로그인 폼 -->
 
-<script>
+<script type="text/javascript">
 $(document).ready(function () {
-
-  // Login
   $('#loginForm').validate({
     // Style error message and input box
     highlight: function(element) {
@@ -50,17 +48,17 @@ $(document).ready(function () {
     },
     submitHandler: function (form) {
       $.ajax({
-          type: 'POST',
-          url: '/login',
-          data: $(form).serialize(),
-          success: function (data, status) {
-              window.location = '/';
-              console.log('success');
-          },
-          error: function (error) {
-            console.log(error);
-            return false;
-          }
+        type: 'POST',
+        url: '/login',
+        data: $(form).serialize(),
+        success: function (data, status) {
+          window.location = '/';
+          console.log('success');
+        },
+        error: function (error) {
+          console.log(error);
+          return false;
+        }
       });
       return false;
     }
