@@ -1,0 +1,69 @@
+<!-- 로그인 폼 -->
+<form role="form" id="loginForm">
+  <div class="form-group">
+    <label for="exampleInputEmail1">이메일 주소</label>
+    <input name="email" type="email" class="form-control" id="exampleInputEmail1" placeholder="이메일 주소를 입력해주세요">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">패스워드</label>
+    <input name="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="패스워드 입력해주세요">
+  </div>
+  <div class="checkbox">
+    <label>
+      <input name="cookie" type="checkbox"> 기억하기
+    </label>
+  </div>
+  <button type="submit" class="btn btn-default btn-block">로그인</button>
+  <a class="btn btn-default btn-block" href="/users">가입하기</a>
+</form>
+<!-- 로그인 폼 -->
+
+<script>
+$(document).ready(function () {
+
+  // Login
+  $('#loginForm').validate({
+    // Style error message and input box
+    highlight: function(element) {
+        $(element).closest('.form-group').addClass('has-error');
+    },
+    unhighlight: function(element) {
+        $(element).closest('.form-group').removeClass('has-error');
+    },
+    errorElement: 'span',
+    errorClass: 'help-block',
+    errorPlacement: function(error, element) {
+        if(element.parent('.input-group').length) {
+            error.insertAfter(element.parent());
+        } else {
+            error.insertAfter(element);
+        }
+    },
+    rules: {
+      email: {
+        required: true
+      },
+      password: {
+        required: true,
+        minlength: 6
+      },
+    },
+    submitHandler: function (form) {
+      $.ajax({
+          type: 'POST',
+          url: '/login',
+          data: $(form).serialize(),
+          success: function (data, status) {
+              window.location = '/';
+              console.log('success');
+          },
+          error: function (error) {
+            console.log(error);
+            return false;
+          }
+      });
+      return false;
+    }
+  });
+});
+</script>

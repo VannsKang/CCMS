@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+
+{% block title %} USERS.HTML {% endblock %}
+
+{% block head %}
+  {% parent %}
+  <link rel="stylesheet" href="./css/style.css" />
+{% endblock %}
+
+{% block content %}
+<div style="margin: 10px;">
+  <form action="/users/create" method="POST">
+    EMAIL: <input type="text" name="email"/><br />
+    PASSWORD: <input type="text" name="password"/><br />
+    NAME: <input type="text" name="name"/><br />
+    <input type="submit" value="회원가입"/>
+  </form>
+</div>
+
+<ol style="margin: 10px;"><!-- Ordered List -->
+{% for user in users %}
+  <li>
+    <ul><!-- Unordered List -->
+      <li>ID: {{ user.id }}</li>
+      <li>NAME: {{ user.name }}</li>
+      <li>EMAIL: {{ user.email }}</li>
+      {% if user.recommender %}
+      <li>Recommender: {{ user.recommender }}</li>
+      {% endif %}
+    </ul>
+  </li>
+{% endfor %}
+</ol>
+
+{% endblock %}

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////
 //
-//  nonyang - app.js
+//  CCMS - app.js
 //
 //  Purpose: To create server
 //  Created: 2013.12.11
@@ -17,6 +17,7 @@ var swig = require('swig');
 // Route
 var routes = require('./routes');
 var user = require('./routes/user');
+var form = require('./routes/form');
 
 // Utilities
 var config = require('./config');
@@ -47,6 +48,16 @@ if ('development' == app.get('env')) {
   swig.setDefaults({ cache: false });
 }
 
+// login check
+var loginRequired = function (req, res, next) {
+  if ( req.session.user_id === undefined ) {
+    res.redirect('/login');
+    return;
+  }
+  req.errorHandler = errorHandler;
+  next();
+};
+
 mongoose.connect('mongodb://localhost/nonyang');
 
 var db = mongoose.connection;
@@ -55,11 +66,15 @@ db.once('open', function callback () {
 
   app.get('/', routes.index);
   app.get('/login', routes.login);
-  app.get('/users', user.list);
 
+  app.get('/users', user.list);
   app.post('/users/create', user.create);
   app.post('/users/edit', user.edit);
   app.post('/users/delete', user.delete);
+  app.post('/login', user.login);
+
+  app.get('/form/login', form.login);
+  app.get('/form/user', form.user);
 
   http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
