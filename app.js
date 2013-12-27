@@ -23,6 +23,7 @@ var transaction = require('./routes/transaction');
 
 // Utilities
 var config = require('./config');
+var errorHandler = require('./lib/errorHandler');
 
 var app = express();
 
@@ -82,7 +83,7 @@ db.once('open', function callback () {
   app.post('/category/create', category.create);
   app.get('/category/all', category.listAll);
 
-  app.post('/transaction/create', transaction.create);
+  app.post('/transaction/create', loginRequired, transaction.create);
 
   http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));

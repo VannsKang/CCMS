@@ -45,6 +45,10 @@
           </div>
           <!-- 둘째 줄 -->
 
+          <div class="form-group">
+            <p class="help-block">*냥 받는 이의 승인이 되면 거래가 완료됩니다.
+          </div>
+
           <!-- 거래 내용 -->
           <div class="form-group">
             <label class="control-label text-success">거래 내용</label>
@@ -71,6 +75,11 @@
             </div>
           </div>
           <!-- 노냥 입력폼 -->
+
+          <div class="form-group">
+            <p class="help-block">*<strong>[냥 주는 이]</strong>와 <strong>[냥 받는 이]</strong>, <strong>[카테고리]</strong> 항목은 되도록이면 자동완성을 기능을 이용하세요.</p>
+          </div>
+
         </div>
 
         <div class="modal-footer">
@@ -134,6 +143,7 @@ $(document).ready(function() {
           console.log('success');
         },
         error: function (error) {
+          alert(error.responseText);
           console.log(error);
           return false;
         }

@@ -49,7 +49,8 @@ exports.create = function (req, res) {
         }
         // Stem: Check transaction to self
         if ( sender_id.toString() === receiver_id.toString() ) {
-          req.errorHandler.sendErrMsg('TRANSACTION_TO_SELF', res);
+          console.log('SELF_TRANSACTION_ERROR');
+          req.errorHandler.sendErrorMessage('SELF_TRANSACTION_ERROR', res);
           return;
         }
         console.log('result:', result);
