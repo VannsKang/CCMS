@@ -26,6 +26,23 @@ exports.create = function (req, res) {
   });
 };
 
+exports.list = function (req, res) {
+  Category.find({}, function (err, categories) {
+    if (err) {
+      res.send(err);
+      return;
+    }
+
+    var result = {
+      'result': 'success',
+      'data': categories
+    };
+
+    res.render('category', result);
+    return;
+  });
+};
+
 exports.listAll = function (req, res) {
   Category.find({}, function (err, categories) {
     if (err) {

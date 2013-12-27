@@ -17,13 +17,6 @@
   <script type="text/javascript" src="./js/additional-methods.min.js"></script>
   <script>
   $(document).ready(function() {
-    // Initialize date picker
-    var $datePicker = $( "#datepicker" );
-    $datePicker.datepicker({
-      'dateFormat': 'yy년 mm월 dd일'
-    });
-    $datePicker.datepicker( "setDate", new Date());
-
     // AJAX LOAD
     $('#loginWindow').load('/form/login', function (data) {
     });
