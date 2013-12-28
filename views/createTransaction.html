@@ -22,7 +22,8 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label class="control-label text-success">카테고리</label>
-                <input id="category" name="category" type="text" class="form-control input-sm" placeholder="카테고리를 입력하세요">
+                <select name="category" id="category" class="form-control input-sm"></select>
+                <!-- <input id="category" name="category" type="text" class="form-control input-sm" placeholder="카테고리를 입력하세요"> -->
               </div>
             </div>
           </div>
@@ -46,7 +47,7 @@
           <!-- 둘째 줄 -->
 
           <div class="form-group">
-            <p class="help-block">*냥 받는 이의 승인이 되면 거래가 완료됩니다.
+            <p class="help-block">*<strong>[냥 주는 이]</strong>와 <strong>[냥 받는 이]</strong>항목은 되도록이면 자동완성을 기능을 이용하세요.</p>
           </div>
 
           <!-- 거래 내용 -->
@@ -77,7 +78,7 @@
           <!-- 노냥 입력폼 -->
 
           <div class="form-group">
-            <p class="help-block">*<strong>[냥 주는 이]</strong>와 <strong>[냥 받는 이]</strong>, <strong>[카테고리]</strong> 항목은 되도록이면 자동완성을 기능을 이용하세요.</p>
+            <p class="help-block">*냥 받는 이의 승인 후에 거래가 완료됩니다.</p>
           </div>
 
         </div>
@@ -190,12 +191,8 @@ $(document).ready(function() {
     success: function (data, status) {
       var availableCategories = [];
 
-      for ( var i in data.data ) {
-        availableCategories[i] = data.data[i].name;
-      }
-
-      $('#category').autocomplete({
-        source: availableCategories
+      $.each(data.data, function (index, value) {
+        $('#category').append('<option value="' +value.name+ '">' +value.name+ '</option>')
       });
     },
     error: function (error) {
