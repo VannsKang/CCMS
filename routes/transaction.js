@@ -13,6 +13,55 @@ var User = require('../lib/model.js').User;
 var Category = require('../lib/model.js').Category;
 var Transaction = require('../lib/model.js').Transaction;
 
+exports.list = function (req, res) {
+  var user_id = req.session.user_id;
+
+  async.waterfall([
+    // Check if user exists
+    function (callback) {
+      User.findById(user_id, function (err, user) {
+        if (err) {
+          throw err;
+        }
+
+        if ( !user ) {
+          req.errorHandler.sendErrorMessage('NO_USER_FOUND', res);
+          return;
+        }
+
+        callback(null);
+        return;
+      });
+    },
+
+    // List all the transactions
+    function (callback) {
+      Transaction.find({ 'sender': user_id }, function (err, transactions) {
+        if (err) {
+          throw err;
+        }
+
+        var result = {
+          'result': 'success',
+          'data': transactions
+        };
+
+        res.send(result);
+        callback(null);
+        return;
+      });
+    }
+  ], function (err, result) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    console.log('success');
+    return;
+  });
+};
+
 exports.create = function (req, res) {
 
   var sender_id, receiver_id, category_id;

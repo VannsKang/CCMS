@@ -67,9 +67,11 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback () {
 
+  // INDEX
   app.get('/', routes.index);
   app.get('/login', routes.login);
 
+  // USER
   app.get('/users', user.list);
   app.get('/users/all', user.listAll);
   app.post('/users/create', user.create);
@@ -77,12 +79,16 @@ db.once('open', function callback () {
   app.post('/users/delete', user.delete);
   app.post('/login', user.login);
 
+  // FORM
   app.get('/form/login', form.login);
   app.get('/form/user', form.user);
 
+  // CATEGORY
   app.post('/category/create', category.create);
   app.get('/category/all', category.listAll);
 
+  // TRANSACTION
+  app.get('/transaction/list', loginRequired, transaction.list);
   app.post('/transaction/create', loginRequired, transaction.create);
 
   http.createServer(app).listen(app.get('port'), function(){
