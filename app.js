@@ -61,7 +61,7 @@ var loginRequired = function (req, res, next) {
   next();
 };
 
-mongoose.connect('mongodb://localhost/nonyang');
+mongoose.connect('mongodb://localhost/nonyang', { user: 'nonyang', pass: 'nolmennolmen' });
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));

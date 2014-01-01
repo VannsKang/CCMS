@@ -7,8 +7,10 @@
 //
 //////////////////////////////////////////////////
 
+// Module Dependencies
 var async = require('async');
 
+// Models
 var User = require('../lib/model.js').User;
 var Category = require('../lib/model.js').Category;
 var Transaction = require('../lib/model.js').Transaction;
@@ -87,6 +89,11 @@ exports.create = function (req, res) {
             if (err) {
               throw err;
             }
+
+            if (!user) {
+              return;
+            }
+
             receiver_id = user._id;
             done(null);
             return;
