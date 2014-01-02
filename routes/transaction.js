@@ -9,18 +9,19 @@
 
 // Module Dependencies
 var async = require('async');
+var config = require('../config');
 
 // Models
 var User = require('../lib/model.js').User;
 var Category = require('../lib/model.js').Category;
 var Transaction = require('../lib/model.js').Transaction;
 
-exports.list = function (req, res) {
+exports.approve = function (req, res) {
   var user_id = req.session.user_id;
+  var transaction_id = req.body.transaction_id;
 
   async.waterfall([
-    // Check if user exists
-    function (callback) {
+    function getUser (callback) {
       User.findById(user_id, function (err, user) {
         if (err) {
           throw err;
@@ -31,41 +32,190 @@ exports.list = function (req, res) {
           return;
         }
 
-        callback(null);
+        callback(null, user);
         return;
       });
     },
 
-    // List all the transactions
-    function (callback) {
-      Transaction.find({ 'sender': user_id }, function (err, transactions) {
+    function getTransaction (user, callback) {
+      Transaction.findById(transaction_id, function (err, transaction) {
+        if (err) {
+          throw err;
+        }
+
+        if ( !transaction ) {
+          req.errorHandler.sendErrorMessage('NO_TRANSACTION', res);
+          return;
+        }
+
+        callback(null, user, transaction);
+        return;
+      });
+    },
+
+    function compareUserToTransaction (user, transaction, callback) {
+      if ( user._id.toString() !== transaction.receiver_id.toString() ) {
+        req.errorHandler.sendErrorMessage('NO_PERMISSION', res);
+        return;
+      }
+
+      updateObject = {
+        $set: {
+          'updated_at': new Date(),
+          'approved': true
+        }
+      };
+
+      Transaction.findByIdAndUpdate(transaction._id, updateObject, function (err, transaction) {
         if (err) {
           throw err;
         }
 
         var result = {
           'result': 'success',
-          'data': transactions
+          'transaction': transaction
         };
 
-        res.send(result);
-        callback(null);
+        callback(null, result);
         return;
       });
     }
   ], function (err, result) {
     if (err) {
-      console.log(err);
-      return;
+      throw err;
     }
 
-    console.log('success');
+    res.send(result);
     return;
   });
 };
 
-exports.create = function (req, res) {
+exports.list = function (req, res) {
+  var user_id = req.session.user_id;
+  var result = {
+    'result': 'success'
+  };
 
+  async.waterfall([
+    function (callback) {
+      // Check pending transaction list
+      Transaction.find({ 'receiver_id': user_id, 'approved': false }, function (err, transactions) {
+        if (err) {
+          throw err;
+        }
+
+        console.log('transactions:', transactions);
+
+        if ( transactions.length === 0 )  {
+          result.transactions = transactions;
+          res.render('./transaction/index', result);
+          return;
+        }
+
+        callback(null, transactions);
+        return;
+      });
+    },
+    getNameFromTransactions
+  ], function (err, transactions) {
+    if (err) {
+      throw err;
+    }
+    result.transactions = transactions;
+    res.render('./transaction/index', result);
+    return;
+  });
+};
+
+exports.personal = function (req, res) {
+  var result = {
+    'result': 'success'
+  };
+
+  var limit = config.options.documentsPerPages || 10;
+  var skip = Number(req.query.skip) * limit || 0;
+
+  var queryOption = {
+    'skip': skip,
+    'limit': limit,
+    'sort': { 'updated_at': -1 }
+  };
+
+  var user_id = req.session.user_id;
+
+  async.waterfall([
+    function (callback) {
+      Transaction.find({ 'sender_id': user_id, 'approved': true }, function (err, transactions) {
+        if (err) {
+          throw err;
+        }
+
+        if ( transactions.length === 0 )  {
+          result.personalTransactions = transactions;
+          res.render('./transaction/personal', result);
+          return;
+        }
+
+        callback(null, transactions);
+        return;
+      });
+    },
+    getNameFromTransactions
+  ], function (err, transactions) {
+    if (err) {
+      throw err;
+    }
+    result.personalTransactions = transactions;
+    res.render('./transaction/personal', result);
+    return;
+  });
+};
+
+exports.public = function (req, res) {
+  var result = {
+    'result': 'success'
+  };
+
+  var limit = config.options.documentsPerPages || 10;
+  var skip = Number(req.query.skip) * limit || 0;
+
+  var queryOption = {
+    'skip': skip,
+    'limit': limit,
+    'sort': { 'updated_at': -1 }
+  };
+
+  async.waterfall([
+    function (callback) {
+      Transaction.find({ 'approved': true }, null, queryOption, function (err, transactions) {
+        if (err) {
+          throw err;
+        }
+
+        if ( transactions.length === 0 )  {
+          result.personalTransactions = transactions;
+          res.render('./transaction/public', result);
+          return;
+        }
+
+        callback(null, transactions);
+        return;
+      });
+    },
+    getNameFromTransactions
+  ], function (err, transactions) {
+    if (err) {
+      throw err;
+    }
+
+    result.publicTransactions = transactions;
+    res.render('./transaction/public', result);
+    return;
+  });
+
+};
+
+exports.create = function (req, res) {
   var sender_id, receiver_id, category_id;
 
   async.waterfall([
@@ -74,7 +224,7 @@ exports.create = function (req, res) {
       async.parallel([
         // Branch #1: Validate sender
         function (done) {
-          User.findOne({'name': req.body.sender}, function (err, user) {
+          User.findOne({ 'name': req.body.sender }, function (err, user) {
             if (err) {
               throw err;
             }
@@ -85,7 +235,7 @@ exports.create = function (req, res) {
         },
         // Branch #2: Validate receiver
         function (done) {
-          User.findOne({'name': req.body.receiver}, function (err, user) {
+          User.findOne({ 'name': req.body.receiver }, function (err, user) {
             if (err) {
               throw err;
             }
@@ -116,10 +266,12 @@ exports.create = function (req, res) {
     },
 
     function (callback) {
-      Category.findOne({'name': req.body.category}, function (err, category) {
+      Category.findOne({ 'name': req.body.category }, function (err, category) {
         if (err) {
           throw err;
         }
+        console.log('req.body.category:', req.body.category);
+        console.log('category:', category);
 
         if (category.length === 0) {
           var object = {
@@ -145,9 +297,9 @@ exports.create = function (req, res) {
 
     function (callback) {
       var transactionObject = {
-        'sender': sender_id,
-        'receiver': receiver_id,
-        'category': category_id,
+        'sender_id': sender_id,
+        'receiver_id': receiver_id,
+        'category_id': category_id,
         'description': req.body.description,
         'amountPoint': req.body.amountPoint
       };
@@ -171,4 +323,61 @@ exports.create = function (req, res) {
     return;
   });
 
+};
+
+
+var getNameFromTransactions = function (transactions, callback) {
+  async.map(transactions, function (transaction, mapCallback) {
+    async.parallel([
+      function getSenderName (done) {
+        User.findById(transaction.sender_id, function (err, sender) {
+          if (err) {
+            throw err;
+          }
+
+          transaction.sender = sender;
+          done(null);
+          return;
+        });
+      },
+
+      function getReceiverName (done) {
+        User.findById(transaction.receiver_id, function (err, receiver) {
+          if (err) {
+            throw err;
+          }
+
+          transaction.receiver = receiver;
+          done(null);
+          return;
+        });
+      },
+
+      function getCategoryName (done) {
+        Category.findById(transaction.category_id, function (err, category) {
+          if (err) {
+            throw err;
+          }
+
+          transaction.category = category;
+          done(null);
+          return;
+        });
+      }
+    ], function done (err, result) {
+      if (err) {
+        throw err;
+      }
+
+      mapCallback(null, transaction);
+      return;
+    });
+  }, function mapCallback (err, result) {
+    if (err) {
+      throw err;
+    }
+
+    callback(null, transactions);
+    return;
+  });
 };

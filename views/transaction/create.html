@@ -2,7 +2,7 @@
 <div class="modal fade" id="addCurencyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form role="form" id="transactionForm">    
+      <form role="form" id="transactionForm">
         <!-- 모달 제목 -->
         <div class="modal-header alert alert-success">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -26,12 +26,7 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label class="control-label text-success">카테고리</label>
-                  <select type="text" class="form-control input-sm" placeholder="카테고리를 입력하세요">
-                    <option>p2p</option>
-                    <option>노닥밥상</option>                                                    
-                    <option>워크숍</option>
-                    <option>기타</option>
-                  </select>                
+                  <select name="category" id="category" type="text" class="form-control input-sm" placeholder="카테고리를 입력하세요"></select>
                 </div>
               </div>
             </div>
@@ -98,8 +93,8 @@
           <input class="btn btn-success" type="submit" value="입력하기">
         </div>
         <!-- 모달 푸터 -->
-        
-      </form>      
+
+      </form>
     </div>
   </div>
 </div>

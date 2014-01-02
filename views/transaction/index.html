@@ -1,0 +1,82 @@
+<script type="text/javascript">
+  var publicSkip = 0;
+  var personalSkip = 0;
+
+  $(document).ready(function () {
+    $('#personal').load('/transaction/personal', function (data) {
+    });
+
+    $('#public').load('/transaction/public', function (data) {
+    });
+
+    $('.approval').on('click', function () {
+      transaction_id = $(this).attr('data');
+      $.ajax({
+        url: '/transaction/approve',
+        type: 'POST',
+        data: { 'transaction_id': transaction_id }
+      }).done(function (data) {
+        if ( data.result !== 'success' ) {
+          alert(data);
+          return;
+        }
+        alert('거래를 승인하였습니다.');
+        window.location = '/';
+        return;
+      }).fail(function (error) {
+        alert(error);
+        return;
+      });
+    });
+  });
+</script>
+
+{% if transactions.length > 0 %}
+<ul class="nav nav-tabs" id="watingChart">
+  <li><a href="#waiting" data-toggle="tab">대기 교환 내역</a></li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane fade in active" id="waiting">
+
+    <!-- 대기 거래 그래표 내용 -->
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-condensed text-right">
+        <thead>
+          <tr class="success">
+            <td>날짜</td><td>냥 주는 이</td><td>냥 받는 이</td><td>카테고리</td><td>내용</td><td>냥</td><td>승인</td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for transaction in transactions %}
+          <tr><td>{{ transaction.created_at|date('Y-m-d', '-540') }}</td><td>{{ transaction.sender_obj.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td>{{ transaction.description }}</td><td>{{ transaction.amountPoint }}</td><td><button data="{{ transaction.id }}" class="btn btn-xs btn-warning approval">승인</button></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <!-- 대기 거래 그래표 내용 -->
+
+  </div>
+</div>
+</div>
+{% endif %}
+
+<!-- 네비게이션 패널 -->
+<ul class="nav nav-tabs" id="currency_flow_chart">
+<li><a href="#personal" data-toggle="tab">개인 교환 내역</a></li>
+<li><a href="#public" data-toggle="tab">전체 교환 내역</a></li>
+</ul>
+<!-- 네비게이션 패널 -->
+
+<!-- 패널 내용 -->
+<div class="tab-content">
+
+<!-- 개인 거래 내역 -->
+<div class="tab-pane fade in active" id="personal">
+</div><!-- 개인 거래 내역 -->
+
+<!-- 전체 거래 내역 -->
+<div class="tab-pane fade" id="public">
+</div><!-- 전체 거래 내역 -->
+
+<!-- 패널 내용 -->

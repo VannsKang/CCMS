@@ -28,7 +28,7 @@ var errorHandler = require('./lib/errorHandler');
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 8888);
 app.engine('html', swig.renderFile);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
@@ -61,7 +61,7 @@ var loginRequired = function (req, res, next) {
   next();
 };
 
-mongoose.connect('mongodb://localhost/nonyang', { user: 'nonyang', pass: 'nolmennolmen' });
+mongoose.connect('mongodb://localhost/nonyang', { user: config.mongoose.username, pass: config.mongoose.password });
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -88,8 +88,11 @@ db.once('open', function callback () {
   app.get('/category/all', category.listAll);
 
   // TRANSACTION
-  app.get('/transaction/list', loginRequired, transaction.list);
+  app.get('/transaction/list', transaction.list);
+  app.get('/transaction/personal', transaction.personal);
+  app.get('/transaction/public', transaction.public);
   app.post('/transaction/create', loginRequired, transaction.create);
+  app.post('/transaction/approve', loginRequired, transaction.approve);
 
   http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
