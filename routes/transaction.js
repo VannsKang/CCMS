@@ -16,6 +16,9 @@ var User = require('../lib/model.js').User;
 var Category = require('../lib/model.js').Category;
 var Transaction = require('../lib/model.js').Transaction;
 
+// Utilities
+var ObjectId = require('mongoose').Types.ObjectId;
+
 exports.approve = function (req, res) {
   var user_id = req.session.user_id;
   var transaction_id = req.body.transaction_id;
@@ -328,6 +331,69 @@ exports.create = function (req, res) {
 
 };
 
+exports.count = function (req, res) {
+  var user_id = req.session.user_id;
+  var result = {
+    'result': 'success'
+  };
+
+  var sentTransactionQuery = [
+    {
+      $match: {
+        'sender_id': ObjectId(user_id),
+        'approved': true
+      }
+    },
+    {
+      $group: { _id: null, sum: { $sum: '$amountPoint' } }
+    }
+  ];
+
+  var receivedTransactionQuery = [
+    {
+      $match: {
+        'receiver_id': ObjectId(user_id),
+        'approved': true
+      }
+    },
+    {
+      $group: { _id: null, sum: { $sum: '$amountPoint' } }
+    }
+  ];
+
+  async.waterfall([
+    function getSentTransactions (callback) {
+      Transaction.aggregate(sentTransactionQuery, function (err, sent) {
+        if (err) {
+          throw err;
+        }
+
+        callback(null, sent[0].sum);
+        return;
+      });
+    },
+
+    function getReceivedTransactions (sentSum, callback) {
+      Transaction.aggregate(receivedTransactionQuery, function (err, received) {
+        if (err) {
+          throw err;
+        }
+
+        callback(null, received[0].sum - sentSum);
+        return;
+      });
+    }
+  ], function (err, totalAmount) {
+    if (err) {
+      throw err;
+    }
+    console.log('totalAmount:', totalAmount);
+
+    result.wallet = totalAmount;
+    res.send(result);
+    return;
+  });
+};
 
 var getNameFromTransactions = function (transactions, callback) {
   async.map(transactions, function (transaction, mapCallback) {

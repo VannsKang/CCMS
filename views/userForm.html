@@ -15,6 +15,14 @@
         window.location = '/';
       });
     });
+
+    $.ajax({
+      url: '/transaction/count',
+      type: 'GET'
+    }).done(function (data) {
+      console.log('data:', data);
+      $('#amountPoint').text(data.wallet);
+    });
   })
 </script>
 
@@ -88,7 +96,7 @@
       </div>
       <div class="input-group">
       <div class="panel-body">
-          <strong class="h3">-1600</strong>
+          <strong class="h3" id="amountPoint"></strong>
       </div>
         <span class="input-group-addon text-primary">냥</span>
       </div>

@@ -70,6 +70,8 @@ db.once('open', function callback () {
   // INDEX
   app.get('/', routes.index);
   app.get('/login', routes.login);
+  app.post('/login', user.login);
+  app.get('/logout', user.logout);
 
   // USER
   app.get('/users', user.list);
@@ -77,8 +79,6 @@ db.once('open', function callback () {
   app.post('/users/create', user.create);
   app.post('/users/edit', user.edit);
   app.post('/users/delete', user.delete);
-  app.post('/login', user.login);
-  app.get('/logout', user.logout);
 
   // FORM
   app.get('/form/login', form.login);
@@ -92,6 +92,7 @@ db.once('open', function callback () {
   app.get('/transaction/list', transaction.list);
   app.get('/transaction/personal', transaction.personal);
   app.get('/transaction/public', transaction.public);
+  app.get('/transaction/count', transaction.count);
   app.post('/transaction/create', loginRequired, transaction.create);
   app.post('/transaction/approve', loginRequired, transaction.approve);
 
