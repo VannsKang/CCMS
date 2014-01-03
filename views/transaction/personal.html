@@ -22,12 +22,12 @@
   <table class="table table-striped table-hover table-condensed text-right">
     <thead>
       <tr class="success">
-        <td>이름</td><td>도움 받고 노냥 지출</td><td>도움 주고 노냥 획득</td><td>거래 횟수</td><td>남은 노냥</td>
+        <td>날짜</td><td>냥 주는 이</td><td>냥 받는 이</td><td>카테고리</td><td>내용</td><td>냥</td>
       </tr>
     </thead>
     <tbody>
       {% for transaction in personalTransactions %}
-      <tr><td>강수명</td><td>8,400</td><td>6,800</td><td>12</td><td>-1,600</td></tr>
+      <tr><td>12월 18일</td><td>{{ transaction.sender.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td>{{ transaction.description }}</td><td>{{ transaction.amountPoint }}</td></tr>
       {% endfor %}
     </tbody>
   </table>

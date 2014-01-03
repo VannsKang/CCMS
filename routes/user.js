@@ -59,7 +59,8 @@ exports.create = function (req, res) {
   var object = {
     'name': req.body.name,
     'email': req.body.email,
-    'password': encrypt(req.body.password)
+    'password': encrypt(req.body.password),
+    'receive_email': ( req.body.receive_email === 'on' ) ? true : false
   };
 
   User(object).save(function (err, user) {
@@ -139,7 +140,6 @@ exports.delete = function (req, res) {
 };
 
 exports.login = function (req, res) {
-
   var errorHandler = req.errorHandler;
 
   var userInfo = {
@@ -175,4 +175,11 @@ exports.login = function (req, res) {
     return;
   });
 
+};
+
+exports.logout = function (req, res) {
+  req.session.user_id = undefined;
+
+  res.send({ 'result': 'success' });
+  return;
 };

@@ -49,7 +49,7 @@
         </thead>
         <tbody>
           {% for transaction in transactions %}
-          <tr><td>{{ transaction.created_at|date('Y-m-d', '-540') }}</td><td>{{ transaction.sender_obj.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td>{{ transaction.description }}</td><td>{{ transaction.amountPoint }}</td><td><button data="{{ transaction.id }}" class="btn btn-xs btn-warning approval">승인</button></td></tr>
+          <tr><td>{{ transaction.created_at|date('Y-m-d', '-540') }}</td><td>{{ transaction.sender.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td>{{ transaction.description }}</td><td>{{ transaction.amountPoint }}</td><td><button data="{{ transaction.id }}" class="btn btn-xs btn-warning approval">승인</button></td></tr>
           {% endfor %}
         </tbody>
       </table>

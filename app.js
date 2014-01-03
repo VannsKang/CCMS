@@ -78,6 +78,7 @@ db.once('open', function callback () {
   app.post('/users/edit', user.edit);
   app.post('/users/delete', user.delete);
   app.post('/login', user.login);
+  app.get('/logout', user.logout);
 
   // FORM
   app.get('/form/login', form.login);
