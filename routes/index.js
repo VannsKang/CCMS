@@ -8,7 +8,12 @@
 //////////////////////////////////////////////////
 
 exports.index = function (req, res) {
-  res.render('index', { title: 'CCMS' });
+  var renderObject = {
+    title: 'CCMS',
+    login: ( req.session.user_id ) ? true : false
+  };
+
+  res.render('index', renderObject);
 };
 
 exports.login = function (req, res) {

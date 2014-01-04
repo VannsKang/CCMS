@@ -96,7 +96,8 @@ exports.approve = function (req, res) {
 exports.list = function (req, res) {
   var user_id = req.session.user_id;
   var result = {
-    'result': 'success'
+    'result': 'success',
+    'login': ( user_id ) ? true : false
   };
 
   async.waterfall([
@@ -131,6 +132,11 @@ exports.list = function (req, res) {
 };
 
 exports.personal = function (req, res) {
+  var user_id = req.session.user_id;
+  if ( !user_id ) {
+    return;
+  }
+
   var result = {
     'result': 'success'
   };
@@ -143,8 +149,6 @@ exports.personal = function (req, res) {
     'limit': limit,
     'sort': { 'updated_at': -1 }
   };
-
-  var user_id = req.session.user_id;
 
   async.waterfall([
     function (callback) {

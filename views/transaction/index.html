@@ -63,7 +63,9 @@
 
 <!-- 네비게이션 패널 -->
 <ul class="nav nav-tabs" id="currency_flow_chart">
+{% if login %}
 <li><a href="#personal" data-toggle="tab">개인 교환 내역</a></li>
+{% endif %}
 <li><a href="#public" data-toggle="tab">전체 교환 내역</a></li>
 </ul>
 <!-- 네비게이션 패널 -->
@@ -71,12 +73,19 @@
 <!-- 패널 내용 -->
 <div class="tab-content">
 
+{% if login %}
 <!-- 개인 거래 내역 -->
 <div class="tab-pane fade in active" id="personal">
 </div><!-- 개인 거래 내역 -->
+{% endif %}
 
+{% if login %}
 <!-- 전체 거래 내역 -->
 <div class="tab-pane fade" id="public">
 </div><!-- 전체 거래 내역 -->
+{% else %}
+<div class="tab-pane fade in active" id="public">
+</div><!-- 전체 거래 내역 -->
+{% endif %}
 
 <!-- 패널 내용 -->
