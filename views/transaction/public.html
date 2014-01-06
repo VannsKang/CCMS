@@ -4,7 +4,7 @@
       if ( publicSkip <= 0 ) {
         // $('.pagerWarningText').remove();
         // $('<p class="h3 pagerWarningText"> 첫페이지입니다 </p>').prependTo('.pagerWarningContext');
-        // $('.pagerWarning').modal('show');          
+        // $('.pagerWarning').modal('show');
         alert('첫페이지입니다');
         return;
       }
@@ -21,10 +21,10 @@
 
     // 모달 닫기
     // $('.modalDismiss').on('click', function () {
-    //   $('.pagerWarning').modal('hide');  
+    //   $('.pagerWarning').modal('hide');
     // });
     // 모달 닫기
-  });  
+  });
 </script>
 
 {% if publicTransactions.length > 0 %}
@@ -38,7 +38,7 @@
     </thead>
     <tbody>
       {% for transaction in publicTransactions %}
-      <tr><td>12월 18일</td><td>{{ transaction.sender.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td>{{ transaction.description }}</td><td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td></tr>
+      <tr><td>{{ transaction.created_at|date('Y년 m월 d일', '-540') }}</td><td>{{ transaction.sender.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td>{{ transaction.description }}</td><td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td></tr>
       {% endfor %}
     </tbody>
   </table>
@@ -60,8 +60,8 @@
 <!-- 페이지 넘김 모달 -->
 <!-- <div class="modal fade pagerWarning">
   <div class="modal-dialog">
-    <div class="modal-content">      
-      <div class="modal-body pagerWarningContext text-center">        
+    <div class="modal-content">
+      <div class="modal-body pagerWarningContext text-center">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default modalDismiss">닫기</button>

@@ -86,10 +86,10 @@
       }
     });
   });
-  </script>  
+  </script>
 {% endblock %}
 
-{% block content %}  
+{% block content %}
 <div class="container">
   <div class="row">
     <!-- 제목 -->
@@ -191,14 +191,14 @@
           <table class="table table-responsive table-striped table-hover text-center">
             <thead class="alert alert-info">
               <tr><td>가입날짜</td><td>이름</td><td>이메일주소</td><td>고유번호</td><td>추천인</td></tr>
-            </thead>            
+            </thead>
             <tbody>
-            {% for user in users %} 
-              <tr><td>{{user.updated_at}}</td><td>{{user.name}}</td><td>{{user.email}}</td><td>{{user.id}}</td><td>{{user.recommender}}</td></tr>
-            {% endfor %}          
-            </tbody>        
+            {% for user in users %}
+              <tr><td>{{ user.updated_at|date('Y년 m월 d일', '-540') }}</td><td>{{ user.name }}</td><td>{{ user.email }}</td><td>{{ user.id }}</td><td>{{ user.recommender }}</td></tr>
+            {% endfor %}
+            </tbody>
           </table>
-        </div>    
+        </div>
       </div>
     </div>
   </div>
