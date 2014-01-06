@@ -1,7 +1,29 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;lang=en);
 
-@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
-
-*, body, h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
-font-family: 'Nanum Gothic', sans-serif;
+@font-face {
+    font-family: 'HANNA';
+    src: url('../fonts/hanna.eot');
+    src: url('../fonts/hanna.eot') format('embedded-opentype'),
+         url('../fonts/hanna.woff') format('woff'),
+         url('../fonts/hanna.ttf') format('truetype'),
+         url('../fonts/hanna.svg') format('svg');
 }
+
+@font-face {
+    font-family: 'NanumBarunGothic';
+    src: url('../fonts/NanumBarunGothic.eot');
+    src: url('../fonts/NanumBarunGothic.eot') format('embedded-opentype'),
+         url('../fonts/NanumBarunGothic.woff') format('woff'),
+         url('../fonts/NanumBarunGothic.ttf') format('truetype'),
+         url('../fonts/NanumBarunGothic.svg') format('svg');
+}
+
+
+*, body, p {
+	font-family: 'NanumBarunGothic', sans-serif;
+}
+
+h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5  {
+	font-family: 'HANNA', sans-serif;
+}
+

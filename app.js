@@ -20,6 +20,7 @@ var user = require('./routes/user');
 var form = require('./routes/form');
 var category = require('./routes/category');
 var transaction = require('./routes/transaction');
+var ranking = require('./routes/ranking')
 
 // Utilities
 var config = require('./config');
@@ -70,9 +71,10 @@ db.once('open', function callback () {
   // INDEX
   app.get('/', routes.index);
   app.get('/login', routes.login);
+  // app.get('/defaultPage', routes.defaultPage);
   app.post('/login', user.login);
   app.get('/logout', user.logout);
-
+  
   // USER
   app.get('/users', user.list);
   app.get('/users/all', user.listAll);
@@ -95,6 +97,10 @@ db.once('open', function callback () {
   app.get('/transaction/count', transaction.count);
   app.post('/transaction/create', loginRequired, transaction.create);
   app.post('/transaction/approve', loginRequired, transaction.approve);
+
+  // RANKING
+  app.get('/ranking/nonyangRank', ranking.nonyangRank);
+  app.get('/ranking/tradeRank', ranking.tradeRank);
 
   http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));

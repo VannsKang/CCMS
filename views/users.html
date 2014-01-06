@@ -1,10 +1,9 @@
 {% extends 'layout.html' %}
 
-{% block title %} USERS.HTML {% endblock %}
+{% block title %} {{ title }} {% endblock %}
 
 {% block head %}
   {% parent %}
-  <link rel="stylesheet" href="./css/style.css" />
 
   <style>
     ul.ui-autocomplete {
@@ -15,6 +14,7 @@
   <script type="text/javascript">
 
   $(document).ready(function() {
+
     $('#createUserForm').validate({
       // Style error message and input box
       highlight: function(element) {
@@ -39,7 +39,6 @@
         },
         name: {
           required: true,
-          minlength: 2
         },
         password: {
           required: true,
@@ -87,117 +86,121 @@
       }
     });
   });
-  </script>
+  </script>  
 {% endblock %}
 
-{% block content %}
+{% block content %}  
 <div class="container">
+  <div class="row">
+    <!-- 제목 -->
+    <header>  <div class="alert alert-info h4">회원 가입</div> </header>
+    <!-- 제목 -->
 
-  <!-- 제목 -->
-  <header>  <div class="alert alert-info h4">회원 가입</div> </header>
-  <!-- 제목 -->
+    <!-- validate 걸어줄 폼 잡기 -->
+    <form role="form" id="createUserForm">
 
-  <!-- validate 걸어줄 폼 잡기 -->
-  <form role="form" id="createUserForm">
+      <!-- 첫째 줄 -->
+      <div class="row">
 
-    <!-- 첫째 줄 -->
-    <div class="row">
+        <!-- 아이디 입력 -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label text-info">아이디 (메일 주소)</label>
+            <input type="email" name="email" class="form-control input-sm" placeholder="메일 주소를 입력해주세요">
+          </div>
+        </div>
+        <!-- 아이디 입력 -->
 
-      <!-- 아이디 입력 -->
-      <div class="col-md-6">
-        <div class="form-group">
-          <label class="control-label text-info">아이디 (메일 주소)</label>
-          <input type="email" name="email" class="form-control input-sm" placeholder="메일 주소를 입력해주세요">
+        <!-- 이름 입력 -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label text-info">이름</label>
+            <input type="text" name="name" class="form-control input-sm" placeholder="이름을 입력해주세요">
+          </div>
+        </div>
+        <!-- 이름 입력 -->
+
+      </div>
+      <!-- 첫째 줄 -->
+
+      <!-- 둘째 줄 -->
+      <div class="row">
+
+        <!-- 패스워드 입력 -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label text-info">패스워드</label>
+            <input type="password" name="password" class="form-control input-sm" placeholder="변경할 패스워드를 입력하세요">
+          </div>
+        </div>
+        <!-- 패스워드 입력 -->
+
+        <!-- 패스워드 입력 확인 -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label text-info">패스워드 확인</label>
+            <input type="password" name="passwordConfirm" class="form-control input-sm" placeholder="패스워드를 재입력해주세요">
+          </div>
+        </div>
+        <!-- 패스워드 입력 확인 -->
+
+      </div>
+      <!-- 둘째 줄 -->
+
+      <!-- 추천인 입력 -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label text-info">추천인 (메일 주소)</label>
+            <input type="email" name="recommender" class="form-control input-sm" placeholder="이메일을 입력해주세요">
+          </div>
         </div>
       </div>
-      <!-- 아이디 입력 -->
+      <!-- 추천인 입력 -->
 
-      <!-- 이름 입력 -->
-      <div class="col-md-6">
-        <div class="form-group">
-          <label class="control-label text-info">이름</label>
-          <input type="text" name="name" class="form-control input-sm" placeholder="이름을 입력해주세요">
-        </div>
+      <!-- 사진 업로드 -->
+      <!-- <div class="form-group">
+        <label class="control-label text-info">사진 올리기</label>
+        <input type="file" name="uploadProfile">
+        <span class="help-block">프로필 사진을 업로드해주세요</span>
+      </div> -->
+      <!-- 사진 업로드 -->
+
+      <!-- 메일 수신 확인 체크 박스-->
+      <div class="checkbox">
+        <input type="checkbox" name="receive_email" checked> 노냥에 대한 중요한 정보를 메일로 수신하겠습니다.
       </div>
-      <!-- 이름 입력 -->
+      <!-- 메일 수신 확인 체크 박스-->
 
+      <!-- 푸터 -->
+      <footer class="text-right">
+        <button type="button" class="btn btn-default backDefault">되돌아가기</button>
+        <button type="submit" class="btn btn-info">가입하기</button>
+      </footer>
+      <!-- 푸터 -->
+
+    </form>
+    <!-- validate 걸어줄 폼 잡기 -->
+
+    <hr>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <h3>회원 가입자 명단</h3>
+          <table class="table table-responsive table-striped table-hover text-center">
+            <thead class="alert alert-info">
+              <tr><td>가입날짜</td><td>이름</td><td>이메일주소</td><td>고유번호</td><td>추천인</td></tr>
+            </thead>            
+            <tbody>
+            {% for user in users %} 
+              <tr><td>{{user.updated_at}}</td><td>{{user.name}}</td><td>{{user.email}}</td><td>{{user.id}}</td><td>{{user.recommender}}</td></tr>
+            {% endfor %}          
+            </tbody>        
+          </table>
+        </div>    
+      </div>
     </div>
-    <!-- 첫째 줄 -->
-
-    <!-- 둘째 줄 -->
-    <div class="row">
-
-      <!-- 패스워드 입력 -->
-      <div class="col-md-6">
-        <div class="form-group">
-          <label class="control-label text-info">패스워드</label>
-          <input type="password" name="password" class="form-control input-sm" placeholder="변경할 패스워드를 입력하세요">
-        </div>
-      </div>
-      <!-- 패스워드 입력 -->
-
-      <!-- 패스워드 입력 확인 -->
-      <div class="col-md-6">
-        <div class="form-group">
-          <label class="control-label text-info">패스워드 확인</label>
-          <input type="password" name="passwordConfirm" class="form-control input-sm" placeholder="패스워드를 재입력해주세요">
-        </div>
-      </div>
-      <!-- 패스워드 입력 확인 -->
-
-    </div>
-    <!-- 둘째 줄 -->
-
-    <!-- 추천인 입력 -->
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form-group">
-          <label class="control-label text-info">추천인 (메일 주소)</label>
-          <input type="email" name="recommender" class="form-control input-sm" placeholder="이메일을 입력해주세요">
-        </div>
-      </div>
-    </div>
-    <!-- 추천인 입력 -->
-
-    <!-- 사진 업로드 -->
-    <!-- <div class="form-group">
-      <label class="control-label text-info">사진 올리기</label>
-      <input type="file" name="uploadProfile">
-      <span class="help-block">프로필 사진을 업로드해주세요</span>
-    </div> -->
-    <!-- 사진 업로드 -->
-
-    <!-- 메일 수신 확인 체크 박스-->
-    <div class="checkbox">
-      <input type="checkbox" name="receive_email" checked> 노냥에 대한 중요한 정보를 메일로 수신하겠습니다.
-    </div>
-    <!-- 메일 수신 확인 체크 박스-->
-
-    <!-- 푸터 -->
-    <footer class="text-right">
-      <a href="/" type="button" class="btn btn-default">되돌아가기</a>
-      <input class="btn btn-info" type="submit" value="가입하기">
-    </footer>
-    <!-- 푸터 -->
-
-  </form>
-  <!-- validate 걸어줄 폼 잡기 -->
-
+  </div>
 </div>
-
-<ol style="margin: 10px;"><!-- Ordered List -->
-{% for user in users %}
-  <li>
-    <ul><!-- Unordered List -->
-      <li>ID: {{ user.id }}</li>
-      <li>NAME: {{ user.name }}</li>
-      <li>EMAIL: {{ user.email }}</li>
-      {% if user.recommender %}
-      <li>Recommender: {{ user.recommender }}</li>
-      {% endif %}
-    </ul>
-  </li>
-{% endfor %}
-</ol>
-
 {% endblock %}

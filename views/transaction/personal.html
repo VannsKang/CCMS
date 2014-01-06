@@ -1,25 +1,37 @@
 <script type="text/javascript">
-  $('#personalPrev').on('click', function (data) {
-    if ( personalSkip <= 0 ) {
-      alert('첫 페이지입니다.');
-      return;
-    }
+  $(document).ready(function () {
+    $('#personalPrev').on('click', function (data) {
+      if ( personalSkip <= 0 ) {
+        // $('.pagerWarningText').remove();
+        // $('<p class="h3 pagerWarningText"> 첫페이지입니다 </p>').prependTo('.pagerWarningContext');
+        // $('.pagerWarning').modal('show');      
+        alert('첫페이지입니다');
+        return;
+      }
 
-    personalSkip--;
-    $('#personal').load('/transaction/personal?skip='+skip+'', function (data) {
+      personalSkip--;
+      $('#personal').load('/transaction/personal?skip='+skip+'', function (data) {
+      });
     });
-  });
-  $('#personalNext').on('click', function (data) {
-    personalSkip++;
-    $('#personal').load('/transaction/personal?skip='+personalSkip+'', function (data) {
+
+    $('#personalNext').on('click', function (data) {
+      personalSkip++;
+      $('#personal').load('/transaction/personal?skip='+personalSkip+'', function (data) {
+      });
     });
+
+    // 모달 닫기
+    // $('.modalDismiss').on('click', function () {
+    //   $('.pagerWarning').modal('hide');  
+    // });
+    // 모달 닫기  
   });
 </script>
 
 {% if personalTransactions.length > 0 %}
 <!-- 개인 거래그래표 내용 -->
 <div class="table-responsive">
-  <table class="table table-striped table-hover table-condensed text-right">
+  <table class="table table-striped table-hover table-condensed text-center">
     <thead>
       <tr class="success">
         <td>날짜</td><td>냥 주는 이</td><td>냥 받는 이</td><td>카테고리</td><td>내용</td><td>냥</td>
@@ -27,7 +39,7 @@
     </thead>
     <tbody>
       {% for transaction in personalTransactions %}
-      <tr><td>12월 18일</td><td>{{ transaction.sender.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td>{{ transaction.description }}</td><td>{{ transaction.amountPoint }}</td></tr>
+      <tr><td>12월 18일</td><td>{{ transaction.sender.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td>{{ transaction.description }}</td><td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td></tr>
       {% endfor %}
     </tbody>
   </table>
@@ -41,7 +53,21 @@
 
 <!-- 차트 페이지 넘기기 -->
 <ul class="pager">
-  <li class="previous" id="personalPrev"><a href="#"><i class="fa fa-long-arrow-left"></i> 최근 내역</a></li>
-  <li class="next" id="personalNext"><a href="#">이전 내역 <i class="fa fa-long-arrow-right"></i></a></li>
+  <li class="previous" id="personalPrev"><a href="#"><i class="fa fa-long-arrow-left"></i> 처음으로</a></li>
+  <li class="next" id="personalNext"><a href="#">다음으로 <i class="fa fa-long-arrow-right"></i></a></li>
 </ul>
 <!-- 차트 페이지 넘기기 -->
+
+<!-- 페이지 넘김 모달 -->
+<!-- <div class="modal fade pagerWarning">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body pagerWarningContext text-center">        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default modalDismiss">닫기</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!-- 페이지 넘김 모달 -->

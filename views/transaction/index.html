@@ -38,35 +38,32 @@
 
 <div class="tab-content">
   <div class="tab-pane fade in active" id="waiting">
-
     <!-- 대기 거래 그래표 내용 -->
     <div class="table-responsive">
-      <table class="table table-striped table-hover table-condensed text-right">
+      <table class="table table-striped table-hover table-condensed text-center">
         <thead>
           <tr class="success">
-            <td>날짜</td><td>냥 주는 이</td><td>냥 받는 이</td><td>카테고리</td><td>내용</td><td>냥</td><td>승인</td>
+            <td>날짜</td><td>냥 보낸 이</td><td>카테고리</td><td>내용</td><td>냥</td><td>승인</td><td>승인취소</td>
           </tr>
         </thead>
         <tbody>
           {% for transaction in transactions %}
-          <tr><td>{{ transaction.created_at|date('Y-m-d', '-540') }}</td><td>{{ transaction.sender.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td>{{ transaction.description }}</td><td>{{ transaction.amountPoint }}</td><td><button data="{{ transaction.id }}" class="btn btn-xs btn-warning approval">승인</button></td></tr>
+          <tr><td>{{ transaction.created_at|date('Y-m-d', '-540') }}</td><td>{{ transaction.sender.name }}</td><td>{{ transaction.category.name }}</td><td>{{ transaction.description }}</td><td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td><td><button data="{{ transaction.id }}" class="btn btn-xs btn-warning approval">승인</button></td><td><button data="{{ transaction.id }}" class="btn btn-xs btn-default">승인취소</button></td></tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
     <!-- 대기 거래 그래표 내용 -->
-
   </div>
-</div>
 </div>
 {% endif %}
 
 <!-- 네비게이션 패널 -->
 <ul class="nav nav-tabs" id="currency_flow_chart">
-{% if login %}
-<li><a href="#personal" data-toggle="tab">개인 교환 내역</a></li>
-{% endif %}
-<li><a href="#public" data-toggle="tab">전체 교환 내역</a></li>
+  <li><a href="#public" data-toggle="tab">전체 교환 내역</a></li>
+  {% if login %}
+  <li><a href="#personal" data-toggle="tab">개인 교환 내역</a></li>
+  {% endif %}
 </ul>
 <!-- 네비게이션 패널 -->
 
@@ -74,18 +71,18 @@
 <div class="tab-content">
 
 {% if login %}
-<!-- 개인 거래 내역 -->
-<div class="tab-pane fade in active" id="personal">
-</div><!-- 개인 거래 내역 -->
-{% endif %}
-
-{% if login %}
 <!-- 전체 거래 내역 -->
-<div class="tab-pane fade" id="public">
+<div class="tab-pane fade in active" id="public">
 </div><!-- 전체 거래 내역 -->
 {% else %}
 <div class="tab-pane fade in active" id="public">
 </div><!-- 전체 거래 내역 -->
+{% endif %}
+
+{% if login %}
+<!-- 개인 거래 내역 -->
+<div class="tab-pane fade" id="personal">
+</div><!-- 개인 거래 내역 -->
 {% endif %}
 
 <!-- 패널 내용 -->

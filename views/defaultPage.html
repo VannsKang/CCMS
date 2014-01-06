@@ -1,0 +1,25 @@
+<script type="text/javascript">
+  $('#transactionList').load('/transaction/list', function (data) {
+  });
+</script>
+
+<!-- 메인 배너 -->                       
+<img src="./img/titleBanner.jpg" alt="titleBanner" class="img-rounded img-responsive titleBanner">           
+<!-- 메인 배너 -->
+
+{% if login %}
+<p><div class="alert alert-warning alert-dismissable text-center">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  <i class="fa fa-warning"></i> &nbsp; <em>거래 내역 추가</em> 버튼을 통해 대기 목록에 거래 내역을 추가할 수 있습니다.          
+</div></p>
+<!-- 안내문 -->
+
+<!-- 모달 토글 버튼 -->
+<p><button class="btn btn-default btn-block" data-toggle="modal" data-target="#addCurencyModal"><i class="fa fa-plus"></i> &nbsp;&nbsp;거래 내역 추가</button></p>
+<!-- 모달 토글 버튼 -->
+{% endif %}
+
+<!-- 리스트 -->
+<div id="transactionList">
+</div>
+<!-- 리스트 -->

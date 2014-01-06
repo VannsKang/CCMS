@@ -6,13 +6,17 @@
   {% parent %}
   <!-- STYLE -->
   <style>
-    #site_logo {
-      padding: 30px 30px 30px 30px;
+    .loginImage {
+      padding: 0px 40px 0px 40px;
+    };
+    .titleBanner {
+      padding: 19px 40px 0px 40px;
     }
   </style>
   <!-- STYLE -->
 
   <!-- SCRIPT -->
+  <script src="./js/jquery-ui-1.10.3.custom.min.js"></script>
   <script>
 
   $(document).ready(function() {
@@ -22,6 +26,18 @@
 
     $('#transactionList').load('/transaction/list', function (data) {
     });
+
+    // $('#indexBody').load('/users' function (data) {
+    // });
+  
+    // $('#indexBody').load('/defaultPage', function (data) {      
+    // });
+  
+    $('#tradeRank').load('/ranking/tradeRank', function (data) {
+    });      
+
+    $('#nonyangRank').load('/ranking/nonyangRank', function (data) {
+    });    
   });
 
   </script>
@@ -46,18 +62,23 @@
     <div class="row">
 
       <!-- 로그인 및 프로필 섹션 -->
-      <div class="col-lg-3" id="loginWindow">
-
+      <div class="col-lg-3" id="loginWindow">        
       </div>
       <!-- 로그인 및 프로필 섹션 -->
 
       <!-- 본문 섹션 -->
-      <div class="col-lg-7">
+      <div class="col-lg-7" id="indexBody">
+
+        <!-- 메인 배너 -->                       
+        <img src="./img/titleBanner.jpg" alt="titleBanner" class="img-rounded img-responsive titleBanner">           
+        <!-- 메인 배너 -->
 
         {% if login %}
-        <!-- lg,xs,sm 안내문 -->
-        <p><div class="alert alert-warning text-center hidden-md" ><i class="fa fa-warning"></i> &nbsp; 거래 내역 추가 버튼을 통해 대기 목록에 거래 내역을 추가할 수 있습니다.</div></p>
-        <!-- lg,xs,sm 안내문 -->
+        <p><div class="alert alert-warning alert-dismissable text-center">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          <i class="fa fa-warning"></i> &nbsp; <em>거래 내역 추가</em> 버튼을 통해 대기 목록에 거래 내역을 추가할 수 있습니다.          
+        </div></p>
+        <!-- 안내문 -->
 
         <!-- 모달 토글 버튼 -->
         <p><button class="btn btn-default btn-block" data-toggle="modal" data-target="#addCurencyModal"><i class="fa fa-plus"></i> &nbsp;&nbsp;거래 내역 추가</button></p>
@@ -68,6 +89,7 @@
         <div id="transactionList">
         </div>
         <!-- 리스트 -->
+      
       </div>
       <!-- 본문 섹션 -->
 
@@ -76,42 +98,12 @@
 
         <div class="row">
           <!-- 거래 랭킹 -->
-          <div class="col-lg-12 col-sm-6">
-            <h4 class="text-center text-success"><strong>거래 랭킹</strong></h3>
-            <div class="table-responsive">
-              <table class="table table-striped table-hover table-condensed text-center">
-                <thead>
-                  <tr><td>순위</td><td>이름</td><td>전일 대비</td></tr>
-                </thead>
-                <tbody>
-                  <tr><td>1</td><td>오미선</td><td><i class="fa fa-arrow-up text-danger"></i></td></tr>
-                  <tr><td>2</td><td>강수명</td><td><i class="fa fa-arrow-down text-info"></i></td></tr>
-                  <tr><td>3</td><td>이미영</td><td><span class="text-warning">━</span></td></tr>
-                  <tr><td>4</td><td>김석준</td><td><i class="fa fa-arrow-down text-info"></i></td></tr>
-                  <tr><td>5</td><td>이건임</td><td><i class="fa fa-arrow-up text-danger"></i></td></tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="col-lg-12 col-sm-6" id="tradeRank">
           </div>
           <!-- 거래 랭킹 -->
 
           <!-- 노냥 랭킹 -->
-          <div class="col-lg-12 col-sm-6">
-            <h4 class="text-center text-success"><strong>노냥 랭킹</strong></h3>
-            <div class="table-responsive">
-              <table class="table table-striped table-hover table-condensed text-center">
-                <thead>
-                  <tr><td>순위</td><td>이름</td><td>전일 대비</td></tr>
-                </thead>
-                <tbody>
-                  <tr><td>1</td><td>김성수</td><td><i class="fa fa-arrow-up text-danger"></i></td></tr>
-                  <tr><td>2</td><td>배수현</td><td><i class="fa fa-arrow-up text-danger"></i></td></tr>
-                  <tr><td>3</td><td>이준상</td><td><span class="text-warning">━</span></td></tr>
-                  <tr><td>4</td><td>강수명</td><td><span class="text-warning">━</span></td></tr>
-                  <tr><td>5</td><td>이건임</td><td><i class="fa fa-arrow-down text-info"></i></td></tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="col-lg-12 col-sm-6" id="nonyangRank">
           </div>
           <!-- 노냥 랭킹 -->
         </div>
