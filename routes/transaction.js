@@ -372,7 +372,7 @@ exports.count = function (req, res) {
           throw err;
         }
 
-        callback(null, sent[0].sum);
+        callback(null, ( sent[0].sum ) ? sent[0].sum : 0);
         return;
       });
     },
