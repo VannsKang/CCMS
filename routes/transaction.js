@@ -93,6 +93,83 @@ exports.approve = function (req, res) {
   });
 };
 
+exports.refusal = function (req, res) {
+  var user_id = req.session.user_id;
+  var transaction_id = req.body.transaction_id;
+
+  async.waterfall([
+    function getUser (callback) {
+      User.findById(user_id, function (err, user) {
+        if (err) {
+          throw err;
+        }
+
+        if ( !user ) {
+          req.errorHandler.sendErrorMessage('NO_USER_FOUND', res);
+          return;
+        }
+
+        callback(null, user);
+        return;
+      });
+    },
+
+    function getTransaction (user, callback) {
+      Transaction.findById(transaction_id, function (err, transaction) {
+        if (err) {
+          throw err;
+        }
+
+        if ( !transaction ) {
+          req.errorHandler.sendErrorMessage('NO_TRANSACTION', res);
+          return;
+        }
+
+        callback(null, user, transaction);
+        return;
+      });
+    },
+
+    function compareUserToTransaction (user, transaction, callback) {
+      if ( user._id.toString() !== transaction.receiver_id.toString() ) {
+        req.errorHandler.sendErrorMessage('NO_PERMISSION', res);
+        return;
+      }
+      console.log('[user._id]:', user);
+      console.log('[transaction._id]:', transaction);
+      
+      var findTransaction = {
+        $and: [
+          { '_id': transaction._id},
+          { 'description': transaction.description}
+        ]
+      };
+
+      Transaction.findOneAndRemove(findTransaction, function (err, transaction) {
+        if (err) {
+          throw err;
+        }
+        console.log('transaction:', transaction);
+
+        var result = {
+          'result': 'success',
+          'deleted': transaction
+        };
+
+        callback(null, result);
+        return;
+      });
+    }
+  ], function (err, result) {
+    if (err) {
+      throw err;
+    }
+
+    res.send(result);
+    return;
+  });
+};
+
 exports.list = function (req, res) {
   var user_id = req.session.user_id;
   var result = {
@@ -234,14 +311,27 @@ exports.create = function (req, res) {
       async.parallel([
         // Branch #1: Validate sender
         function (done) {
-          User.findOne({ 'name': req.body.sender }, function (err, user) {
+          // User.findOne({ 'name': req.body.sender }, function (err, user) {          
+          //     console.log({ 'name': req.body.sender });
+          //     if (err) {
+          //       throw err;
+          //     }
+
+          //     sender_id = user._id;
+
+          //     done(null);
+          //     return;                
+
+          User.findById(req.session.user_id, function (err, user) {
+            
             if (err) {
-              throw err;
+            res.send(err);
             }
-            sender_id = user._id;
+
+            sender_id = req.session.user_id;
             done(null);
-            return;
-          });
+            return;              
+          });                
         },
         // Branch #2: Validate receiver
         function (done) {
@@ -454,3 +544,4 @@ var getNameFromTransactions = function (transactions, callback) {
     return;
   });
 };
+

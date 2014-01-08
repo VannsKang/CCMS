@@ -34,12 +34,12 @@
   <table class="table table-striped table-hover table-condensed text-center">
     <thead>
       <tr class="success">
-        <td>날짜</td><td>냥 주는 이</td><td>냥 받는 이</td><td>카테고리</td><td>내용</td><td>냥</td>
-      </tr>
+        <td>날짜</td><td>냥 주는 이</td><td>냥 받는 이</td><td>카테고리</td><td>내용</td><td>거래한 노냥</td>
     </thead>
+      </tr>
     <tbody>
       {% for transaction in personalTransactions %}
-      <tr><td>{{ transaction.created_at|date('Y년 m월 d일', '-540') }}</td><td>{{ transaction.sender.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td>{{ transaction.description }}</td><td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td></tr>
+      <tr><td>{{ transaction.created_at|date('Y-m-d', '-540') }}</td><td>{{ transaction.sender.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td>{{ transaction.description }}</td><td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td></tr>
       {% endfor %}
     </tbody>
   </table>

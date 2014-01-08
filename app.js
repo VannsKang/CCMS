@@ -77,6 +77,7 @@ db.once('open', function callback () {
   
   // USER
   app.get('/users', user.list);
+  app.get('/editForm', user.editForm);
   app.get('/users/all', user.listAll);
   app.post('/users/create', user.create);
   app.post('/users/edit', user.edit);
@@ -97,6 +98,7 @@ db.once('open', function callback () {
   app.get('/transaction/count', transaction.count);
   app.post('/transaction/create', loginRequired, transaction.create);
   app.post('/transaction/approve', loginRequired, transaction.approve);
+  app.post('/transaction/refusal', loginRequired, transaction.refusal);
 
   // RANKING
   app.get('/ranking/nonyangRank', ranking.nonyangRank);

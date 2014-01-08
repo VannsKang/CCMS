@@ -44,9 +44,17 @@ $(document).ready(function () {
         required: true
       },
       password: {
-        required: true,
-        minlength: 6
+        required: true
+      }
+    },
+    messages: {
+      email: {
+        email: '이메일 형식으로 써주세요',
+        required: '아이디를 제대로 입력해주세요'
       },
+      password: {
+        required: '패스워드를 제대로 입력해주세요'
+      }
     },
     submitHandler: function (form) {
       $.ajax({
