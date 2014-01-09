@@ -74,7 +74,7 @@ db.once('open', function callback () {
   // app.get('/defaultPage', routes.defaultPage);
   app.post('/login', user.login);
   app.get('/logout', user.logout);
-  
+
   // USER
   app.get('/users', user.list);
   app.get('/editForm', user.editForm);
