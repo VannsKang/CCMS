@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////
 //
-//  CCMS - app.js
+//  CCMS - ccms.js
 //
 //  Purpose: To create server
 //  Created: 2013.12.11

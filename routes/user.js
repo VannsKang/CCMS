@@ -69,7 +69,7 @@ exports.create = function (req, res) {
   });
 };
 
-exports.edit = function (req, res) {  
+exports.edit = function (req, res) {
   User.findById(req.session.user_id, function (err, user) {
     if (err) {
       res.send(err);
@@ -86,11 +86,11 @@ exports.edit = function (req, res) {
     };
 
     var updateQuery = {
-      $set: { 
+      $set: {
         'name': req.body.name,
         'password': encrypt(req.body.password)
       }
-    };    
+    };
 
     User.findOneAndUpdate(findQuery, updateQuery, function (err, user) {
       if (err) {
@@ -108,7 +108,7 @@ exports.edit = function (req, res) {
       return;
     });
 
-    return;    
+    return;
   });
 
   // var findQuery;
@@ -124,9 +124,9 @@ exports.edit = function (req, res) {
   //   console.log('user!!:', user.email);
 
   //   findQueryForEmail = user.email
-  //   return;    
+  //   return;
   // });
-   
+
   // User.find({}, function (err, users) {
   //   if(err) {
   //     res.send(err);
@@ -146,7 +146,7 @@ exports.edit = function (req, res) {
   // console.log('findQuery!!!:', findQueryForEmail);
 
   // var updateQuery = {
-  //   $set: { 
+  //   $set: {
   //     'name': req.body.name,
   //     'password': encrypt(req.body.password)
   //   }
@@ -217,8 +217,6 @@ exports.delete = function (req, res) {
 };
 
 exports.login = function (req, res) {
-  var errorHandler = req.errorHandler;
-
   var userInfo = {
     'email': req.body.email,
     'password': req.body.password
@@ -232,12 +230,12 @@ exports.login = function (req, res) {
     }
 
     if ( !user ) {
-      errorHandler.sendErrorMessage('NO_USER_FOUND', res);
+      req.errorHandler.sendErrorMessage('NO_USER_FOUND', res);
       return;
     }
 
     if ( userInfo.password !== decrypt(user.password) ) {
-      errorHandler.sendErrorMessage('PASSWORD_NOT_MATCH', res);
+      req.errorHandler.sendErrorMessage('PASSWORD_NOT_MATCH', res);
       return;
     }
 
