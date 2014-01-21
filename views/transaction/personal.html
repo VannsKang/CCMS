@@ -27,6 +27,14 @@
     // 모달 닫기
   });
 </script>
+<style type="text/css">
+  .transactionDesc {
+    white-space:nowrap; 
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+  }; 
+</style>
 
 {% if personalTransactions.length > 0 %}
 <!-- 개인 거래그래표 내용 -->
@@ -39,7 +47,7 @@
       </tr>
     <tbody>
       {% for transaction in personalTransactions %}
-      <tr><td>{{ transaction.created_at|date('Y-m-d', '-540') }}</td><td>{{ transaction.sender.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td>{{ transaction.description }}</td><td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td></tr>
+      <tr><td>{{ transaction.created_at|date('Y-m-d', '-540') }}</td><td>{{ transaction.sender.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td class="transactionDesc">{{ transaction.description }}</td><td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td></tr>
       {% endfor %}
     </tbody>
   </table>

@@ -52,6 +52,14 @@
 
   });
 </script>
+<style type="text/css">
+  .transactionDesc {
+    white-space:nowrap; 
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+  }; 
+</style>
 
 {% if transactions.length > 0 %}
 <ul class="nav nav-tabs" id="watingChart">
@@ -74,7 +82,7 @@
             <td>{{ transaction.created_at|date('Y-m-d', '-540') }}</td>
             <td>{{ transaction.sender.name }}</td>
             <td>{{ transaction.category.name }}</td>
-            <td>{{ transaction.description }}</td>
+            <td class="transactionDesc">{{ transaction.description }}</td>
             <td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td>
             <td><button data="{{ transaction.id }}" class="btn btn-xs btn-warning approval">승인</button>&nbsp;&nbsp;&nbsp;<button data="{{ transaction.id }}" class="btn btn-xs btn-default refusal">취소</button></td>
           </tr>
