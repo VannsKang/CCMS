@@ -16,7 +16,7 @@ exports.list = function (req, res) {
     if (err) {
       res.send(err);
       return;
-    };
+    }
 
     var result = {
       'result': 'success',
@@ -107,78 +107,17 @@ exports.edit = function (req, res) {
       res.send(result);
       return;
     });
-
-    return;
   });
-
-  // var findQuery;
-  // var findQueryForEmail;
-
-  // User.findById(req.session.user_id, function (err, user) {
-  //   if (err) {
-  //     res.send(err);
-  //     return;
-  //   }
-
-  //   console.log('user!!:', user);
-  //   console.log('user!!:', user.email);
-
-  //   findQueryForEmail = user.email
-  //   return;
-  // });
-
-  // User.find({}, function (err, users) {
-  //   if(err) {
-  //     res.send(err);
-  //     return;
-  //   };
-
-  //   console.log('[users]:', users);
-  //   return;
-  // });
-
-  // var findQuery = {
-  //   $and: [
-  //     { 'email': req.body.email }
-  //   ]
-  // };
-
-  // console.log('findQuery!!!:', findQueryForEmail);
-
-  // var updateQuery = {
-  //   $set: {
-  //     'name': req.body.name,
-  //     'password': encrypt(req.body.password)
-  //   }
-  // };
-
-  // User.findOneAndUpdate(findQuery, updateQuery, function (err, user) {
-  //   if (err) {
-  //     throw err;
-  //   }
-  //   // console.log('[fixedUser!]:', user);
-
-  //   var result = {
-  //     'result': 'success',
-  //     'data': user
-  //   };
-
-  //   console.log(result);
-  //   res.send(result);
-  //   return;
-  // });
-
 };
 
 exports.editForm = function (req, res) {
-
   User.findById(req.session.user_id, function (err, user) {
     if (err) {
       res.send(err);
       return;
-    };
+    }
     console.log('user!!!:', user);
-    console.log('[req.session.user_id]:', req.session.user_id)
+    console.log('[req.session.user_id]:', req.session.user_id);
 
     var result = {
       'result': 'success',
@@ -187,9 +126,7 @@ exports.editForm = function (req, res) {
 
     res.render('editForm', result);
     return;
-
-  })
-
+  });
 };
 
 exports.delete = function (req, res) {
