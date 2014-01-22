@@ -7,6 +7,10 @@
 //
 //////////////////////////////////////////////////
 
+// Module Dependencies
+var async = require('async');
+var config = require('../config');
+
 var User = require('../lib/model.js').User;
 var encrypt = require('../lib/util.js').encrypt;
 var decrypt = require('../lib/util.js').decrypt;
@@ -16,7 +20,7 @@ exports.list = function (req, res) {
     if (err) {
       res.send(err);
       return;
-    }
+    };
 
     var result = {
       'result': 'success',
@@ -70,54 +74,101 @@ exports.create = function (req, res) {
 };
 
 exports.edit = function (req, res) {
-  User.findById(req.session.user_id, function (err, user) {
-    if (err) {
-      res.send(err);
+  var findQuery;
+  var updateQuery;
+  var reqOriginalPassword;
+  var reqLoginPassword;
+
+  async.waterfall([
+    function getLoginUser (callback) {
+      User.findById(req.session.user_id, function (err, user) {
+        if (err) {
+          res.send(err);
+          return;
+        }
+
+        reqOriginalPassword = req.body.originalPassword;
+        reqLoginPassword = decrypt(user.password);
+
+        findQuery = {
+          $and: [
+            { 'email': user.email }
+          ]
+        };
+
+        updateQuery = {
+          $set: {
+            'name': req.body.name,
+            'password': encrypt(req.body.password)
+          }
+        };
+
+        callback(null, user);
+        return;
+      });      
+    },
+    function verifiedPassword (user, callback) {
+      if (reqOriginalPassword !== reqLoginPassword) {    
+        console.log('notMatchedPassword!');        
+        res.redirect('/editForm');
+        return;
+      };
+      callback(null, user);
       return;
+    },      
+    function updateUser (user, callback) {
+      User.findOneAndUpdate(findQuery, updateQuery, function (err, user) {
+        if (err) {
+          throw err;
+        }
+
+        console.log('[fixedUser!]:', user);
+
+        var result = {
+          'result': 'success',
+          'data': user
+        };
+
+        console.log(result);
+        callback(null, result);
+        return;
+      });
+    }    
+  ], function (err, result) {
+    if (err) {
+      throw err;
     }
 
-    console.log('user!!:', user);
-    console.log('user!!:', user.email);
-
-    var findQuery = {
-      $and: [
-        { 'email': user.email }
-      ]
-    };
-
-    var updateQuery = {
-      $set: {
-        'name': req.body.name,
-        'password': encrypt(req.body.password)
-      }
-    };
-
-    User.findOneAndUpdate(findQuery, updateQuery, function (err, user) {
-      if (err) {
-        throw err;
-      }
-      console.log('[fixedUser!]:', user);
-
-      var result = {
-        'result': 'success',
-        'data': user
-      };
-
-      console.log(result);
-      res.send(result);
-      return;
-    });
+    res.send(result);
+    return;
   });
 };
+
+// exports.editInfo = function (req, res) {  
+//   if (req.session.user_id) {
+//     res.redirect('/editForm');    
+//     return;
+//   } else if (!req.session.user_id) {
+//     res.redirect('/editForm')
+//     return;
+//   } else {
+//     if (err) {
+//       throw err;
+//     }
+
+//     res.render('/');
+//     return;    
+//   }
+// };
 
 exports.editForm = function (req, res) {
   User.findById(req.session.user_id, function (err, user) {
     if (err) {
       res.send(err);
       return;
-    }
+    };
     console.log('user!!!:', user);
-    console.log('[req.session.user_id]:', req.session.user_id);
+    console.log('[req.session.user_id]:', req.session.user_id)
 
     var result = {
       'result': 'success',
@@ -126,7 +177,8 @@ exports.editForm = function (req, res) {
 
     res.render('editForm', result);
     return;
-  });
+
+  })
 };
 
 exports.delete = function (req, res) {

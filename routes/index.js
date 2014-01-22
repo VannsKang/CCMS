@@ -50,6 +50,3 @@ exports.login = function (req, res) {
   res.render('login');
 };
 
-// exports.defaultPage = function (req, res) {
-//   res.render('defaultPage');
-// };

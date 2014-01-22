@@ -1,3 +1,88 @@
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#editUserForm').validate({
+      // Style error message and input box
+      highlight: function(element) {
+        $(element).closest('.form-group').addClass('has-error');
+      },
+      unhighlight: function(element) {
+        $(element).closest('.form-group').removeClass('has-error');
+      },
+      errorElement: 'span',
+      errorClass: 'help-block',
+      errorPlacement: function(error, element) {
+        if(element.parent('.input-group').length) {
+          error.insertAfter(element.parent());
+        } else {
+          error.insertAfter(element);
+        }
+      },
+      rules: {
+        email: {
+          required: true,
+          email: true
+        },
+        name: {
+          required: true,
+        },
+        password: {
+          required: true,
+          minlength: 6
+        },
+        passwordConfirm: {
+          required: true,
+          minlength: 6,
+          equalTo: "#password"
+        },
+        originalPassword: {
+          required: true,
+          minlength: 6
+        }
+      },
+      messages: {
+        email: {
+          required: "이메일 주소를 제대로 입력해주세요",
+          email: "아이디는 반드시 이메일 주소 형식이어야 합니다"
+        },
+        name: {
+          required: "이름을 제대로 입력해주세요",
+          minlength: jQuery.format("최소한 {0} 글자 이상 입력해주세요")
+        },
+        password: {
+          required: "패스워드를 제대로 입력해주세요",
+          minlength: jQuery.format("최소한 {0} 글자 이상 입력해주세요")
+        },
+        passwordConfirm: {
+          required: "패스워드를 제대로 입력해주세요",
+          minlength: jQuery.format("최소한 {0} 글자 이상 입력해주세요"),
+          equalTo: "패스워드가 일치하지 않습니다"
+        },
+        originalPassword: {
+          required: "패스워드를 제대로 입력해주세요",
+          minlength: jQuery.format("최소한 {0} 글자 이상 입력해주세요")          
+        }
+      },
+      submitHandler: function (form) {
+        $.ajax({
+          type: 'POST',
+          url: '/users/edit',
+          data: $(form).serialize(),
+          success: function (data, status) {            
+            window.location = '/';
+            console.log('success');
+          },
+          error: function (error) {
+            alert(error.responseText);
+            console.log(error);
+            return false;
+          }
+        });
+        return false;
+      }
+    });
+  });  
+</script>  
+
 <!-- 정보 수정 모달 -->
 <div class="modal fade" id="configModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -25,7 +110,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label class="control-label text-info">이름</label>
-                <input type="text" name="name" class="form-control input-sm" placeholder="변경할 이름을 입력해주세요" value=" {{ user.name }}">
+                <input type="text" name="name" class="form-control input-sm" placeholder="변경할 이름을 입력해주세요" value="{{user.name}}">
               </div>
             </div>
             <!-- 이름 입력 -->
@@ -42,7 +127,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label class="control-label text-info">변경할 패스워드</label>
-                <input type="password" name="password" class="form-control input-sm" placeholder="변경할 패스워드를 입력하세요">
+                <input type="password" name="password" id="password" class="form-control input-sm" placeholder="변경할 패스워드를 입력하세요">
               </div>
             </div>
             <!-- 패스워드 입력 -->
@@ -51,10 +136,23 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label class="control-label text-info">변경할 패스워드 확인</label>
-                <input type="password" name="passwordConfirm" class="form-control input-sm" placeholder="패스워드를 재입력해주세요">
+                <input type="password" name="passwordConfirm" id="passwordConfirm" class="form-control input-sm" placeholder="패스워드를 재입력해주세요">
               </div>
             </div>
             <!-- 패스워드 입력 확인 -->
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="control-label text-info">이전 패스워드 확인</label>
+                <input type="password" name="originalPassword" id="originalPassword" class="form-control input-sm" placeholder="이전 패스워드를 입력하세요">
+              </div>              
+            </div>
+          </div>
+
+          <div class="form-group">
+            <p class="help-block text-warning"><i class="fa fa-exclamation-circle"></i> &nbsp;<strong>[이전 패스워드 확인]</strong>이 되어야 정보 수정이 가능합니다.</p>
           </div>
 
           <!-- 사진 업로드 -->
@@ -92,78 +190,3 @@
   </div>
 </div>
 <!-- 정보 수정 모달 -->
-<script type="text/javascript">
- $(document).ready(function() {
-
-    $('#editUserForm').validate({
-      // Style error message and input box
-      highlight: function(element) {
-        $(element).closest('.form-group').addClass('has-error');
-      },
-      unhighlight: function(element) {
-        $(element).closest('.form-group').removeClass('has-error');
-      },
-      errorElement: 'span',
-      errorClass: 'help-block',
-      errorPlacement: function(error, element) {
-        if(element.parent('.input-group').length) {
-          error.insertAfter(element.parent());
-        } else {
-          error.insertAfter(element);
-        }
-      },
-      rules: {
-        email: {
-          required: true,
-          email: true
-        },
-        name: {
-          required: true,
-        },
-        password: {
-          required: true,
-          minlength: 6
-        },
-        passwordConfirm: {
-          required: true,
-          minlength: 6
-        }
-      },
-      messages: {
-        email: {
-          required: "이메일 주소를 제대로 입력해주세요",
-          email: "아이디는 반드시 이메일 주소 형식이어야 합니다"
-        },
-        name: {
-          required: "이름을 제대로 입력해주세요",
-          minlength: jQuery.format("최소한 {0} 글자 이상 입력해주세요")
-        },
-        password: {
-          required: "패스워드를 제대로 입력해주세요",
-          minlength: jQuery.format("최소한 {0} 글자 이상 입력해주세요")
-        },
-        passwordConfirm: {
-          required: "패스워드를 제대로 입력해주세요",
-          minlength: jQuery.format("최소한 {0} 글자 이상 입력해주세요")
-        }
-      },
-      submitHandler: function (form) {
-        $.ajax({
-          type: 'POST',
-          url: '/users/edit',
-          data: $(form).serialize(),
-          success: function (data, status) {            
-            window.location = '/';
-            console.log('success');
-          },
-          error: function (error) {
-            alert(error.responseText);
-            console.log(error);
-            return false;
-          }
-        });
-        return false;
-      }
-    });
-  });  
-</script>

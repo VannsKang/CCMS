@@ -14,6 +14,7 @@
   <script type="text/javascript">
 
   $(document).ready(function() {
+    
 
     $('#createUserForm').validate({
       // Style error message and input box
@@ -46,7 +47,8 @@
         },
         passwordConfirm: {
           required: true,
-          minlength: 6
+          minlength: 6,
+          equalTo: "#password"
         }
       },
       messages: {
@@ -64,7 +66,8 @@
         },
         passwordConfirm: {
           required: "패스워드를 제대로 입력해주세요",
-          minlength: jQuery.format("최소한 {0} 글자 이상 입력해주세요")
+          minlength: jQuery.format("최소한 {0} 글자 이상 입력해주세요"),
+          equalTo: "패스워드가 일치하지 않습니다"
         }
       },
       submitHandler: function (form) {
@@ -131,7 +134,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label class="control-label text-info">패스워드</label>
-            <input type="password" name="password" class="form-control input-sm" placeholder="변경할 패스워드를 입력하세요">
+            <input type="password" name="password" id="password" class="form-control input-sm" placeholder="변경할 패스워드를 입력하세요">
           </div>
         </div>
         <!-- 패스워드 입력 -->
@@ -140,7 +143,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label class="control-label text-info">패스워드 확인</label>
-            <input type="password" name="passwordConfirm" class="form-control input-sm" placeholder="패스워드를 재입력해주세요">
+            <input type="password" name="passwordConfirm" id="passwordConfirm" class="form-control input-sm" placeholder="패스워드를 재입력해주세요">
           </div>
         </div>
         <!-- 패스워드 입력 확인 -->

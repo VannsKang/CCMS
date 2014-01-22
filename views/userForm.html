@@ -7,6 +7,7 @@
       $('.nonyangModal').modal();
     });
 
+    // logout
     $('.logout').on('click', function () {
       $.ajax({
         url: '/logout',
@@ -41,7 +42,8 @@
       <div class="visible-lg visible-xs">
 
         <!-- 정보 수정 토글 -->
-        <button class="btn btn-block btn-success" data-toggle="modal" data-target="#configModal"><i class="fa fa-cogs"></i> &nbsp;&nbsp; 정보 수정</button>
+        <!-- <button class="btn btn-block btn-success" data-toggle="modal" data-target="#configModal"><i class="fa fa-cogs"></i> &nbsp;&nbsp; 정보 수정</button> -->
+        <a href="/editForm" class="btn btn-block btn-success"><i class="fa fa-cogs"></i> &nbsp;&nbsp; 정보 수정</a>        
         <!-- 정보 수정 토글 -->
 
         <!-- 로그아웃 버튼 -->
@@ -103,10 +105,8 @@
     </div>
     <!-- 보유 노냥 내역 -->
     <hr>
-
-
-
   </div>
 </div>
+
 
 {% include "./userEditModal.html" %}

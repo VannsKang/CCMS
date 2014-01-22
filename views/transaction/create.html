@@ -141,7 +141,7 @@ $(document).ready(function() {
       },
       amountPoint: {
         required: true,
-        number: true,
+        digits: true
       }
     },
     messages: {
@@ -159,9 +159,9 @@ $(document).ready(function() {
       },
       amountPoint: {
         required: "거래한 노냥 액수를 제대로 입력해주세요",
-        number: "숫자만 입력해주세요",
         min: "최소한 100노냥 이상 입력해주세요",
-        max: "한번에 100000노냥 이상 거래가 불가능합니다"
+        max: "한번에 100000노냥 이상 거래가 불가능합니다",
+        digits: "숫자만 입력가능합니다"
       }
     },
     submitHandler: function (form) {

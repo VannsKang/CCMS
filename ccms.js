@@ -71,17 +71,18 @@ db.once('open', function callback () {
   // INDEX
   app.get('/', routes.index);
   app.get('/login', routes.login);
-  // app.get('/defaultPage', routes.defaultPage);
   app.post('/login', user.login);
   app.get('/logout', user.logout);
 
   // USER
   app.get('/users', user.list);
-  app.get('/editForm', user.editForm);
   app.get('/users/all', user.listAll);
   app.post('/users/create', user.create);
-  app.post('/users/edit', user.edit);
   app.post('/users/delete', user.delete);
+
+  app.post('/users/edit', user.edit);
+  // app.get('/editInfo', user.editInfo);   
+  app.get('/editForm', user.editForm);
 
   // FORM
   app.get('/form/login', form.login);

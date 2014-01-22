@@ -4,17 +4,9 @@
 
 {% block head %}
   {% parent %}
-
-  <style>
-    ul.ui-autocomplete {
-      z-index: 1100;
-    }
-  </style>
-
-  <script type="text/javascript">
-
+  
+<script type="text/javascript">
   $(document).ready(function() {
-
     $('#editUserForm').validate({
       // Style error message and input box
       highlight: function(element) {
@@ -46,7 +38,17 @@
         },
         passwordConfirm: {
           required: true,
+          minlength: 6,
+          equalTo: "#password"
+        },
+        originalPassword: {
+          required: true,
           minlength: 6
+        },
+        originalPasswordConfirm: {
+          required: true,
+          minlength: 6,
+          equalTo: "#originalPassword"
         }
       },
       messages: {
@@ -64,7 +66,17 @@
         },
         passwordConfirm: {
           required: "패스워드를 제대로 입력해주세요",
-          minlength: jQuery.format("최소한 {0} 글자 이상 입력해주세요")
+          minlength: jQuery.format("최소한 {0} 글자 이상 입력해주세요"),
+          equalTo: "패스워드가 일치하지 않습니다"
+        },
+        originalPassword: {
+          required: "패스워드를 제대로 입력해주세요",
+          minlength: jQuery.format("최소한 {0} 글자 이상 입력해주세요")          
+        },
+        originalPasswordConfirm: {
+          required: "패스워드를 제대로 입력해주세요",
+          minlength: jQuery.format("최소한 {0} 글자 이상 입력해주세요"),
+          equalTo: "패스워드가 일치하지 않습니다"
         }
       },
       submitHandler: function (form) {
@@ -72,7 +84,7 @@
           type: 'POST',
           url: '/users/edit',
           data: $(form).serialize(),
-          success: function (data, status) {
+          success: function (data, status) {            
             window.location = '/';
             console.log('success');
           },
@@ -85,120 +97,122 @@
         return false;
       }
     });
-  });
-  </script>
+  });  
+</script>  
 {% endblock %}
 
 {% block content %}
+
+
 <div class="container">
   <div class="row">
     <hr>
     <!-- 제목 -->
-    <header>  <div class="alert alert-info h4">회원 정보 수정</div> </header>
+    <header>  <div class="alert alert-info h4">회원 정보 변경</div> </header>
     <!-- 제목 -->
-
-    <!-- validate 걸어줄 폼 잡기 -->
     <form role="form" id="editUserForm">
 
-      <!-- 첫째 줄 -->
-      <div class="row">
+        <!-- 첫째 줄 -->
+        <div class="row">
 
-        <!-- 아이디 입력 -->
-        <div class="col-md-6">
-          <div class="form-group">
-            <label class="control-label text-info">아이디 (메일 주소)</label>
-            <input type="email" name="email" class="form-control input-sm" placeholder="{{ user.email }}">
+          <!-- 아이디 입력 -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label text-info">아이디 (메일 주소)</label>
+              <input type="email" name="email" class="form-control input-sm" placeholder="{{users.email}}" disabled>
+            </div>
           </div>
-        </div>
-        <!-- 아이디 입력 -->
-  
-        <!-- 이름 입력 -->
-        <div class="col-md-6">
-          <div class="form-group">
-            <label class="control-label text-info">이름</label>
-            <input type="text" name="name" class="form-control input-sm" placeholder="{{ user.name }}">
+          <!-- 아이디 입력 -->
+    
+          <!-- 이름 입력 -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label text-info">이름</label>
+              <input type="text" name="name" class="form-control input-sm" placeholder="변경할 이름을 입력해주세요" value="{{users.name}}">
+            </div>
           </div>
+          <!-- 이름 입력 -->
+
         </div>
-        <!-- 이름 입력 -->
+        <!-- 첫째 줄 -->
+        <div class="form-group">
+          <p class="help-block text-warning"><i class="fa fa-exclamation-circle"></i> &nbsp;<strong>[아이디]</strong>는 변경할 수 없습니다.</p>
+        </div>
+        <!-- 둘째 줄 -->
+        <div class="row">
 
-      </div>
-      <!-- 첫째 줄 -->
-
-      <!-- 둘째 줄 -->
-      <div class="row">
-
-        <!-- 패스워드 입력 -->
-        <div class="col-md-6">
-          <div class="form-group">
-            <label class="control-label text-info">패스워드</label>
-            <input type="password" name="password" class="form-control input-sm" placeholder="변경할 패스워드를 입력하세요">
+          <!-- 패스워드 입력 -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label text-info">새로운 패스워드</label>
+              <input type="password" name="password" id="password" class="form-control input-sm" placeholder="변경할 패스워드를 입력하세요">
+            </div>
           </div>
-        </div>
-        <!-- 패스워드 입력 -->
+          <!-- 패스워드 입력 -->
 
-        <!-- 패스워드 입력 확인 -->
-        <div class="col-md-6">
-          <div class="form-group">
-            <label class="control-label text-info">패스워드 확인</label>
-            <input type="password" name="passwordConfirm" class="form-control input-sm" placeholder="패스워드를 재입력해주세요">
+          <!-- 패스워드 입력 확인 -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label text-info">새로운 패스워드 확인</label>
+              <input type="password" name="passwordConfirm" id="passwordConfirm" class="form-control input-sm" placeholder="패스워드를 재입력해주세요">
+            </div>
           </div>
+          <!-- 패스워드 입력 확인 -->
         </div>
-        <!-- 패스워드 입력 확인 -->
-      </div>
 
-      <!-- 사진 업로드 -->
-        <!-- <div class="form-group">
-          <label class="control-label text-info">사진 올리기</label>
-          <input type="file">
-          <span class="help-block">프로필 사진을 업로드해주세요.</span>
-        </div> -->
-      <!-- 사진 업로드 -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label text-info">변경전 패스워드</label>
+              <input type="password" name="originalPassword" id="originalPassword" class="form-control input-sm" placeholder="이전 패스워드를 입력하세요">
+            </div>              
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label text-info">변경전 패스워드 확인</label>
+              <input type="password" name="originalPasswordConfirm" id="originalPasswordConfirm" class="form-control input-sm" placeholder="이전 패스워드를 재입력하세요">
+            </div>              
+          </div>          
+        </div>
 
-      <!-- 자기소개폼 -->
-        <!-- <div class="form-group">
-          <label class="control-label text-info">자기 소개</label>
-          <textarea class="form-control" rows="3" placeholder="{{ user.description }}"></textarea>
-        </div> -->
-      <!-- 자기소개폼 -->
+        <div class="form-group">
+          <p class="help-block text-warning"><i class="fa fa-exclamation-circle"></i> &nbsp;<strong>[이전 패스워드 확인]</strong>이 되어야 정보 수정이 가능합니다.</p>
+        </div>
 
-      <!-- 메일 수신 확인 체크 박스-->
-      <div class="checkbox">
-        <input type="checkbox" name="receive_email" checked> 노냥에 대한 중요한 정보를 메일로 수신하겠습니다.
-      </div>
-      <!-- 메일 수신 확인 체크 박스-->
+        <!-- 사진 업로드 -->
+        <!-- <p>
+          <div class="form-group">
+            <label class="control-label text-info">사진 올리기</label>
+            <input type="file">
+            <span class="help-block">프로필 사진을 업로드해주세요.</span>
+          </div>
+        </p> -->
+        <!-- 사진 업로드 -->
 
-    <!-- 푸터 -->
-    <footer class="text-right">
-      <button type="button" class="btn btn-default backDefault">되돌아가기</button>
-      <button type="submit" class="btn btn-info">변경하기</button>
-    </footer>
-    <!-- 푸터 -->
+        <!-- 자기소개폼 -->
+        <!-- <p>
+          <div class="form-group">
+            <label class="control-label text-info">자기 소개</label>
+            <textarea class="form-control" rows="3" placeholder="{{ user.description }}"></textarea>
+          </div>
+        </p> -->
+        <!-- 자기소개폼 -->
 
+        <!-- 메일 수신 확인 체크 박스-->
+        <div class="checkbox">
+          <input type="checkbox" name="receive_email" checked> 노냥에 대한 중요한 정보를 메일로 수신하겠습니다.
+        </div>
+        <!-- 메일 수신 확인 체크 박스-->
+
+      <!-- 푸터 -->
+      <footer class="text-right">
+        <a href="/"><button type="button" class="btn btn-default backDefault">되돌아가기</button></a>
+        <button type="submit" class="btn btn-info">변경하기</button>
+      </footer>
+      <!-- 푸터 -->
     </form>
-    <!-- validate 걸어줄 폼 잡기 -->
-
-    <hr>
-
-
-    <div class="row">
-      <div class="col-xs-12">
-        <h3>회원 가입자 명단</h3>
-        <div class="table-responsive">
-          <table class="table table-striped table-hover text-center">
-            <thead class="alert alert-info">
-              <tr><td>가입날짜</td><td>이름</td><td>이메일주소</td><td>고유번호</td><td>추천인</td></tr>
-            </thead>
-            <tbody>
-            {% for user in users %}
-              <tr><td>{{ user.updated_at|date('Y년 m월 d일', '-540') }}</td><td>{{ user.name }}</td><td>{{ user.email }}</td><td>{{ user.id }}</td><td>{{ user.recommender }}</td></tr>
-            {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-
-
+  </div>
 </div>
+
+<!-- 정보 수정 모달 -->
 {% endblock %}
