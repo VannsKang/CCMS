@@ -105,17 +105,18 @@ exports.edit = function (req, res) {
 
         callback(null, user);
         return;
-      });      
+      });
     },
     function verifiedPassword (user, callback) {
-      if (reqOriginalPassword !== reqLoginPassword) {    
-        console.log('notMatchedPassword!');        
+      if (reqOriginalPassword !== reqLoginPassword) {
+        console.log('notMatchedPassword!');
         res.redirect('/editForm');
         return;
-      };
+      }
+
       callback(null, user);
       return;
-    },      
+    },
     function updateUser (user, callback) {
       User.findOneAndUpdate(findQuery, updateQuery, function (err, user) {
         if (err) {
@@ -133,7 +134,7 @@ exports.edit = function (req, res) {
         callback(null, result);
         return;
       });
-    }    
+    }
   ], function (err, result) {
     if (err) {
       throw err;
@@ -144,31 +145,12 @@ exports.edit = function (req, res) {
   });
 };
 
-// exports.editInfo = function (req, res) {  
-//   if (req.session.user_id) {
-//     res.redirect('/editForm');    
-//     return;
-//   } else if (!req.session.user_id) {
-//     res.redirect('/editForm')
-//     return;
-//   } else {
-//     if (err) {
-//       throw err;
-//     }
-
-//     res.render('/');
-//     return;    
-//   }
-// };
-
 exports.editForm = function (req, res) {
   User.findById(req.session.user_id, function (err, user) {
     if (err) {
       res.send(err);
       return;
-    };
-    console.log('user!!!:', user);
-    console.log('[req.session.user_id]:', req.session.user_id)
+    }
 
     var result = {
       'result': 'success',
@@ -177,8 +159,7 @@ exports.editForm = function (req, res) {
 
     res.render('editForm', result);
     return;
-
-  })
+  });
 };
 
 exports.delete = function (req, res) {
@@ -238,7 +219,6 @@ exports.login = function (req, res) {
     res.redirect('/');
     return;
   });
-
 };
 
 exports.logout = function (req, res) {
