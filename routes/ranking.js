@@ -25,7 +25,7 @@ exports.tradeRank = function (req, res) {
         },
         { $group:
           {
-            '_id': '$sender_id',
+            '_id': '$receiver_id',
             'transactions': { $sum: 1 },
             'amountPoint': { $sum: '$amountPoint' }
           }
@@ -90,7 +90,7 @@ exports.nonyangRank = function (req, res) {
         },
         { $group:
           {
-            '_id': '$sender_id',
+            '_id': '$receiver_id',
             'transactions': { $sum: 1 },
             'amountPoint': { $sum: '$amountPoint' }
           }
