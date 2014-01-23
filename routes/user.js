@@ -20,7 +20,7 @@ exports.list = function (req, res) {
     if (err) {
       res.send(err);
       return;
-    };
+    }
 
     var result = {
       'result': 'success',
