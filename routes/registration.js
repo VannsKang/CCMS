@@ -1,4 +1,11 @@
-
+//////////////////////////////////////////////////
+//
+//  nonyang - registration.js
+//
+//  Purpose: ??
+//  Created: 2013.12.11
+//
+//////////////////////////////////////////////////
 
 exports.register = function (req, res) {
   if ( req.session.user_id ) {
