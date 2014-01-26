@@ -13,4 +13,6 @@ module.exports = {
     key: 'nodacnodac-studio-in-seogyo'
   },
 
+  registrationWithoutRecommender: true
+
 };

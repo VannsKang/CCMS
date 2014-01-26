@@ -14,17 +14,43 @@ var config = require('../config');
 var User = require('../lib/model.js').User;
 var encrypt = require('../lib/util.js').encrypt;
 var decrypt = require('../lib/util.js').decrypt;
+var errorHandler = require('../lib/errorHandler');
 
 exports.list = function (req, res) {
-  User.find({}, function (err, users) {
-    if (err) {
-      res.send(err);
-      return;
-    }
+  async.waterfall([
+    function (callback) {
+      User.find({}, function (err, users) {
+        if (err) {
+          res.send(err);
+          return;
+        }
 
-    var result = {
+        callback(null, users);
+        return;
+      });
+    },
+
+    function (users, callback) {
+      async.map(users, function (user, done) {
+        User.findById(user.recommender_id, function (err, recommender) {
+          if (err) throw err;
+
+          user.recommender = recommender;
+          console.log('recommender:', recommender);
+          done(null, user);
+          return;
+        });
+      }, function (err, result) {
+        callback(null, users);
+        return;
+      });
+    }
+  ], function (err, result) {
+    console.log(result[0].recommender);
+
+    result = {
       'result': 'success',
-      'users': users
+      'users': result
     };
 
     res.render('users', result);
@@ -50,22 +76,55 @@ exports.listAll = function (req, res) {
 };
 
 exports.create = function (req, res) {
-  var object = {
-    'name': req.body.name,
-    'email': req.body.email,
-    'password': encrypt(req.body.password),
-    'receive_email': ( req.body.receive_email === 'on' ) ? true : false
-  };
+  if ( !req.body.recommender ) {
+    errorHandler.sendErrorMessage('NO_RECOMMENDER_FOUND', res);
+    return;
+  }
 
-  User(object).save(function (err, user) {
+  async.waterfall([
+    function (callback) {
+      User.findOne({ 'email': req.body.recommender }, function (err, recommender) {
+        if (err) {
+          throw err;
+        }
+
+        if ( !recommender ) {
+          errorHandler.sendErrorMessage('NO_RECOMMENDER_FOUND', res);
+          return;
+        }
+
+        callback(null, recommender);
+        return;
+      });
+    },
+
+    function (recommender, callback) {
+      var object = {
+        'name': req.body.name,
+        'email': req.body.email,
+        'password': encrypt(req.body.password),
+        'recommender_id': recommender._id,
+        'receive_email': ( req.body.receive_email === 'on' ) ? true : false
+      };
+
+      User(object).save(function (err, user) {
+        if (err) {
+          res.send(err);
+          return;
+        }
+
+        callback(null, user);
+        return;
+      });
+    }
+  ], function (err, result) {
     if (err) {
-      res.send(err);
-      return;
+      throw err;
     }
 
-    var result = {
+    result = {
       'result': 'success',
-      'data': user
+      'data': result
     };
 
     res.send(result);

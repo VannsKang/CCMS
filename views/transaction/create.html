@@ -35,13 +35,13 @@
             <!-- 첫째 줄 -->
 
             <!-- 둘째 줄 -->
-            <div class="row">     
+            <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="control-label text-success">냥 주는 이</label>
                   <input id="sender" name="sender" type="text" class="form-control input-sm" placeholder="{{ user.name }}" disabled>
                 </div>
-              </div>        
+              </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="control-label text-success">냥 받는 이</label>
@@ -76,7 +76,7 @@
             <div class="form-group">
               <label class="control-label text-success">거래한 노냥</label>
               <div class="input-group">
-                <input id="amountPoint" name="amountPoint" type="number" class="form-control text-right" min="100" max="100000"step="100" placeholder="금액을 입력하세요">
+                <input id="amountPoint" name="amountPoint" type="number" class="form-control text-right" min="100" max="20000"step="100" placeholder="금액을 입력하세요">
                 <span class="input-group-addon">냥</span>
               </div>
             </div>
@@ -147,7 +147,7 @@ $(document).ready(function() {
     messages: {
       category: {
         required: "카테고리를 제대로 선택해주세요"
-      },      
+      },
       sender: {
         required: "주는 사람 이름을 제대로 입력해주세요",
       },
@@ -160,7 +160,7 @@ $(document).ready(function() {
       amountPoint: {
         required: "거래한 노냥 액수를 제대로 입력해주세요",
         min: "최소한 100노냥 이상 입력해주세요",
-        max: "한번에 100000노냥 이상 거래가 불가능합니다",
+        max: "한번에 20,000노냥 이상 거래가 불가능합니다",
         digits: "숫자만 입력가능합니다"
       }
     },
@@ -169,7 +169,7 @@ $(document).ready(function() {
         type: 'POST',
         url: '/transaction/create',
         data: $(form).serialize(),
-        success: function (data, status) {         
+        success: function (data, status) {
           window.location = '/';
           console.log('success');
         },
@@ -201,9 +201,6 @@ $(document).ready(function() {
         availableUsers[i] = data.data[i].name;
       }
 
-      // $('#sender').autocomplete({
-      //   source: availableUsers
-      // });
       $('#receiver').autocomplete({
         source: availableUsers
       });

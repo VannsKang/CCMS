@@ -14,7 +14,6 @@
   <script type="text/javascript">
 
   $(document).ready(function() {
-    
 
     $('#createUserForm').validate({
       // Style error message and input box
@@ -76,8 +75,14 @@
           url: '/users/create',
           data: $(form).serialize(),
           success: function (data, status) {
-            window.location = '/';
-            console.log('success');
+            if ( data.result == 'success' ) {
+              alert('회원가입이 완료되었습니다. 로그인 화면으로 이동합니다.');
+              window.location = '/';
+              return;
+            }
+
+            alert('에러가 발생하였습니다.');
+            return;
           },
           error: function (error) {
             alert(error.responseText);
@@ -156,7 +161,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label class="control-label text-info">추천인 (메일 주소)</label>
-            <input type="email" name="recommender" class="form-control input-sm" placeholder="현재 활성화되어있지 않습니다." disabled>
+            <input type="email" name="recommender" class="form-control input-sm" placeholder="이메일을 입력하세요.">
           </div>
         </div>
       </div>
@@ -203,7 +208,17 @@
             </thead>
             <tbody>
             {% for user in users %}
-              <tr><td>{{ user.updated_at|date('Y년 m월 d일', '-540') }}</td><td>{{ user.name }}</td><td>{{ user.email }}</td><td>{{ user.id }}</td><td>{{ user.recommender }}</td></tr>
+              <tr>
+                <td>{{ user.updated_at|date('Y년 m월 d일', '-540') }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.id }}</td>
+                {% if user.recommender %}
+                <td>{{ user.recommender.name }}</td>
+                {% else %}
+                <td style="color: lightgray;">없음</td>
+                {% endif %}
+              </tr>
             {% endfor %}
             </tbody>
           </table>

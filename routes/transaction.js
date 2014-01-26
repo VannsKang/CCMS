@@ -137,7 +137,7 @@ exports.refusal = function (req, res) {
       }
       console.log('[user._id]:', user);
       console.log('[transaction._id]:', transaction);
-      
+
       var findTransaction = {
         $and: [
           { '_id': transaction._id},
@@ -311,27 +311,16 @@ exports.create = function (req, res) {
       async.parallel([
         // Branch #1: Validate sender
         function (done) {
-          // User.findOne({ 'name': req.body.sender }, function (err, user) {          
-          //     console.log({ 'name': req.body.sender });
-          //     if (err) {
-          //       throw err;
-          //     }
-
-          //     sender_id = user._id;
-
-          //     done(null);
-          //     return;                
-
           User.findById(req.session.user_id, function (err, user) {
-            
+
             if (err) {
             res.send(err);
             }
 
             sender_id = req.session.user_id;
             done(null);
-            return;              
-          });                
+            return;
+          });
         },
         // Branch #2: Validate receiver
         function (done) {
