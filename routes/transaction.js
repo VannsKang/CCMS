@@ -451,7 +451,7 @@ exports.count = function (req, res) {
           throw err;
         }
 
-        callback(null, ( sent[0].sum ) ? sent[0].sum : 0);
+        callback(null, ( sent[0] ) ? sent[0].sum : 0);
         return;
       });
     },
@@ -462,7 +462,8 @@ exports.count = function (req, res) {
           throw err;
         }
 
-        callback(null, received[0].sum - sentSum);
+        var receivedSum = ( received[0] ) ? received[0].sum : 0;
+        callback(null, receivedSum - sentSum);
         return;
       });
     }

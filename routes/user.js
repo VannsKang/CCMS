@@ -259,12 +259,12 @@ exports.login = function (req, res) {
     }
 
     if ( !user ) {
-      req.errorHandler.sendErrorMessage('NO_USER_FOUND', res);
+      errorHandler.sendErrorMessage('NO_USER_FOUND', res);
       return;
     }
 
     if ( userInfo.password !== decrypt(user.password) ) {
-      req.errorHandler.sendErrorMessage('PASSWORD_NOT_MATCH', res);
+      errorHandler.sendErrorMessage('PASSWORD_NOT_MATCH', res);
       return;
     }
 
