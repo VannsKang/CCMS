@@ -28,7 +28,8 @@ exports.tradeRank = function (req, res) {
         { $sort:
           {
             'count': 1,
-            'wallet': -1
+            'wallet': -1,
+            'created_at': -1
           }
         }
       ];
@@ -85,7 +86,8 @@ exports.nonyangRank = function (req, res) {
         { $sort:
           {
             'wallet': -1,
-            'count': -1
+            'count': -1,
+            'created_at': -1
           }
         }
       ];

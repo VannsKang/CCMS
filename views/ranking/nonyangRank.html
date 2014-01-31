@@ -6,11 +6,13 @@
     </thead>
     <tbody>
       {% for rank in ranks %}
+      {% if loop.index <= 7 %}
       <tr>
         <td>{{ loop.index }}</td>
         <td>{{ rank.user.name }}</td>
         <td>{{ rank.user.wallet }}</td>
       </tr>
+      {% endif %}
       {% endfor %}
     </tbody>
   </table>
