@@ -18,6 +18,8 @@ var Transaction = require('../lib/model.js').Transaction;
 
 // Utilities
 var ObjectId = require('mongoose').Types.ObjectId;
+var errorHandler = require('../lib/errorHandler');
+var util = require('../lib/util');
 
 exports.approve = function (req, res) {
   var user_id = req.session.user_id;
@@ -79,6 +81,7 @@ exports.approve = function (req, res) {
           'transaction': transaction
         };
 
+        util.updateWallet(user_id);
         callback(null, result);
         return;
       });
@@ -158,6 +161,7 @@ exports.refusal = function (req, res) {
           'deleted': transaction
         };
 
+        util.updateWallet(user_id);
         callback(null, result);
         return;
       });
@@ -451,67 +455,17 @@ exports.count = function (req, res) {
     'result': 'success'
   };
 
-  var sentTransactionQuery = [
-    {
-      $match: {
-        'sender_id': ObjectId(user_id),
-        'approved': true
-      }
-    },
-    {
-      $group: { _id: null, sum: { $sum: '$amountPoint' } }
+  User.findById(user_id, function (err, user) {
+    if ( !user ) {
+      errorHandler.sendErrorMessage('NO_USER_FOUND', res);
+      return;
     }
-  ];
 
-  var receivedTransactionQuery = [
-    {
-      $match: {
-        'receiver_id': ObjectId(user_id),
-        'approved': true
-      }
-    },
-    {
-      $group: { _id: null, sum: { $sum: '$amountPoint' } }
+    if ( !user.wallet ) {
+      util.updateWallet(user_id);
     }
-  ];
 
-  async.waterfall([
-    function getSentTransactions (callback) {
-      Transaction.aggregate(sentTransactionQuery, function (err, sent) {
-        if (err) {
-          throw err;
-        }
-
-        callback(null, ( sent[0] ) ? sent[0].sum : 0);
-        return;
-      });
-    },
-
-    function getReceivedTransactions (sentSum, callback) {
-      Transaction.aggregate(receivedTransactionQuery, function (err, received) {
-        if (err) {
-          throw err;
-        }
-
-        var receivedSum = ( received[0] ) ? received[0].sum : 0;
-        callback(null, receivedSum - sentSum);
-        return;
-      });
-    },
-
-    function updateUserWallet (summary, callback ) {
-      User.findByIdAndUpdate(user_id, { 'wallet': summary }, function (err, user) {
-        console.log('user:', user);
-        callback(null, user);
-        return;
-      });
-    }
-  ], function (err, user) {
-    if (err) {
-      throw err;
-    }
-    console.log('user.wallet:', user.wallet);
-
+    console.log('user:', user);
     result.wallet = user.wallet;
     res.send(result);
     return;
