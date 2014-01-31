@@ -44,6 +44,7 @@
           <table class="table table-striped table-hover text-center">
             <thead class="alert alert-info">
               <tr>
+                <td>번호</td>
                 <td>가입날짜</td>
                 <td>이름</td>
                 <td>이메일주소</td>
@@ -55,6 +56,7 @@
             <tbody>
               {% for user in users %}
               <tr>
+                <td>{{ loop.index }}</td>
                 <td>{{ user.created_at|date('Y년 m월 d일', '-540') }}</td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
