@@ -21,6 +21,12 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var errorHandler = require('../lib/errorHandler');
 var util = require('../lib/util');
 
+// INDEX
+exports.index = function (req, res) {
+  res.render('admin.html');
+  return;
+};
+
 
 // USERS
 

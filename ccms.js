@@ -117,6 +117,7 @@ db.once('open', function callback () {
   // app.get('/update/wallet', util.updateAllWallets);
 
   // ADMIN
+  app.get('/admin', admin.index);
   app.get('/admin/users', checkAdminLogin, admin.users);
   app.post('/admin/users/approve', checkAdminLogin, admin.usersApproval);
   app.get('/admin/transactions', checkAdminLogin, admin.transactions);
