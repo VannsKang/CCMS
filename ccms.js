@@ -55,12 +55,16 @@ if ('development' == app.get('env')) {
 }
 
 // login check
-var checkLoginMiddleware = function (req, res, next) {
+var checkLogin = function (req, res, next) {
   if ( req.session.user_id === undefined ) {
     res.redirect('/login');
     return;
   }
   req.errorHandler = errorHandler;
+  next();
+};
+
+var checkAdminLogin = function (req, res, next) {
   next();
 };
 
@@ -81,8 +85,8 @@ db.once('open', function callback () {
   app.get('/users/all', user.listAll);
   app.post('/users/create', user.create);
   app.post('/users/delete', user.delete);
-  app.get('/users/pending', checkLoginMiddleware, user.pending);
-  app.post('/users/approve', checkLoginMiddleware, user.approve);
+  app.get('/users/pending', checkLogin, user.pending);
+  app.post('/users/approve', checkLogin, user.approve);
   app.post('/users/edit', user.edit);
 
   app.get('/editForm', user.editForm);
@@ -101,9 +105,9 @@ db.once('open', function callback () {
   app.get('/transaction/personal', transaction.personal);
   app.get('/transaction/public', transaction.public);
   app.get('/transaction/count', transaction.count);
-  app.post('/transaction/create', checkLoginMiddleware, transaction.create);
-  app.post('/transaction/approve', checkLoginMiddleware, transaction.approve);
-  app.post('/transaction/refusal', checkLoginMiddleware, transaction.refusal);
+  app.post('/transaction/create', checkLogin, transaction.create);
+  app.post('/transaction/approve', checkLogin, transaction.approve);
+  app.post('/transaction/refusal', checkLogin, transaction.refusal);
 
   // RANKING
   app.get('/ranking/nonyangRank', ranking.nonyangRank);
@@ -113,8 +117,8 @@ db.once('open', function callback () {
   // app.get('/update/wallet', util.updateAllWallets);
 
   // ADMIN
-  app.get('/admin/users', admin.users);
-  app.post('/admin/users/approve', admin.usersApproval);
+  app.get('/admin/users', checkAdminLogin, admin.users);
+  app.post('/admin/users/approve', checkAdminLogin, admin.usersApproval);
 
   http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
