@@ -18,30 +18,24 @@ exports.tradeRank = function (req, res) {
   async.waterfall([
     function (callback) {
       var aggregateQuery = [
-        { $match:
-          {
-            'approved': true
-          }
-        },
         { $group:
           {
-            '_id': '$receiver_id',
-            'transactions': { $sum: 1 },
-            'amountPoint': { $sum: '$amountPoint' }
+            '_id': '$_id',
+            'wallet': { $sum: '$wallet' },
+            'count': { $sum: '$count' }
           }
         },
         { $sort:
           {
-            'transactions': -1,
-            'amountPoint': -1
+            'count': 1,
+            'wallet': -1
           }
         }
       ];
 
-      Transaction.aggregate(aggregateQuery, function (err, ranks) {
+      User.aggregate(aggregateQuery, function (err, ranks) {
         if (err) throw err;
 
-        console.log('tradeRanks:', ranks);
         callback(null, ranks);
         return;
       });
@@ -51,7 +45,6 @@ exports.tradeRank = function (req, res) {
       async.map(ranks, function (rank, done) {
         User.findById(rank._id, function (err, user) {
           if (err) throw err;
-          console.log('user:', user);
 
           rank.user = user;
           done(null);
@@ -72,7 +65,7 @@ exports.tradeRank = function (req, res) {
       'ranks': result
     };
 
-    console.log('result:', result);
+    console.log('trade-result:', result);
     res.render('./ranking/tradeRank', result);
     return;
   });
@@ -82,30 +75,24 @@ exports.nonyangRank = function (req, res) {
   async.waterfall([
     function (callback) {
       var aggregateQuery = [
-        { $match:
-          {
-            'approved': true
-          }
-        },
         { $group:
           {
-            '_id': '$receiver_id',
-            'transactions': { $sum: 1 },
-            'amountPoint': { $sum: '$amountPoint' }
+            '_id': '$_id',
+            'wallet': { $sum: '$wallet' },
+            'count': { $sum: '$count' }
           }
         },
         { $sort:
           {
-            'amountPoint': -1,
-            'transactions': -1
+            'wallet': -1,
+            'count': -1
           }
         }
       ];
 
-      Transaction.aggregate(aggregateQuery, function (err, ranks) {
+      User.aggregate(aggregateQuery, function (err, ranks) {
         if (err) throw err;
 
-        console.log('ranks:', ranks);
         callback(null, ranks);
         return;
       });
@@ -115,7 +102,6 @@ exports.nonyangRank = function (req, res) {
       async.map(ranks, function (rank, done) {
         User.findById(rank._id, function (err, user) {
           if (err) throw err;
-          console.log('user:', user);
 
           rank.user = user;
           done(null);
@@ -137,7 +123,7 @@ exports.nonyangRank = function (req, res) {
       'ranks': result
     };
 
-    console.log('result:', result);
+    console.log('nonyang-result:', result);
     res.render('./ranking/nonyangRank', result);
     return;
   });

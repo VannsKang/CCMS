@@ -461,9 +461,9 @@ exports.count = function (req, res) {
       return;
     }
 
-    if ( !user.wallet ) {
+    // if ( !user.wallet ) {
       util.updateWallet(user_id);
-    }
+    // }
 
     console.log('user:', user);
     result.wallet = user.wallet;

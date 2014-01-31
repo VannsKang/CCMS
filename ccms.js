@@ -20,11 +20,12 @@ var user = require('./routes/user');
 var form = require('./routes/form');
 var category = require('./routes/category');
 var transaction = require('./routes/transaction');
-var ranking = require('./routes/ranking')
+var ranking = require('./routes/ranking');
 
 // Utilities
 var config = require('./config');
 var errorHandler = require('./lib/errorHandler');
+var util = require('./lib/util');
 
 var app = express();
 
@@ -81,7 +82,7 @@ db.once('open', function callback () {
   app.post('/users/delete', user.delete);
 
   app.post('/users/edit', user.edit);
-  // app.get('/editInfo', user.editInfo);   
+  // app.get('/editInfo', user.editInfo);
   app.get('/editForm', user.editForm);
 
   // FORM
@@ -104,6 +105,9 @@ db.once('open', function callback () {
   // RANKING
   app.get('/ranking/nonyangRank', ranking.nonyangRank);
   app.get('/ranking/tradeRank', ranking.tradeRank);
+
+  // ETC.
+  app.get('/update/wallet', util.updateAllWallets);
 
   http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
