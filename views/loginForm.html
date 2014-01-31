@@ -64,8 +64,10 @@ $(document).ready(function () {
         success: function (data, status) {
           window.location = '/';
           console.log('success');
+          return;
         },
         error: function (error) {
+          alert(error.responseText);
           console.log(error);
           return false;
         }

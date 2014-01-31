@@ -4,13 +4,13 @@
 
 {% block head %}
   {% parent %}
-  
+
   <style>
     .loginImage {
       padding: 0px 40px 0px 40px;
     };
   </style>
-    
+
   <script>
 
   $(document).ready(function() {
@@ -18,14 +18,19 @@
     $('#loginWindow').load('/form/login', function (data) {
     });
 
+    {% if login %}
+    $('#signupRequestList').load('/users/pending', function (data) {
+    });
+    {% endif %}
+
     $('#transactionList').load('/transaction/list', function (data) {
     });
-  
+
     $('#tradeRank').load('/ranking/tradeRank', function (data) {
-    });      
+    });
 
     $('#nonyangRank').load('/ranking/nonyangRank', function (data) {
-    });    
+    });
   });
 
   </script>
@@ -36,7 +41,7 @@
 <section>
   <div class="container">
 
-    <!-- 사이트 타이틀 -->
+    <!-- TITLE -->
     <div class="row">
       <div class="col-xs-12">
         <div class="page-header">
@@ -44,54 +49,59 @@
         </div>
       </div>
     </div>
-    <!-- 사이트 타이틀 -->
+    <!-- TITLE -->
 
     <div class="row">
 
-      <!-- 로그인 및 프로필 섹션 -->
-      <div class="col-lg-3" id="loginWindow">        
+      <!-- LOGIN AND USER PROFILE -->
+      <div class="col-lg-3" id="loginWindow">
       </div>
-      <!-- 로그인 및 프로필 섹션 -->
+      <!-- LOGIN AND USER PROFILE -->
 
-      <!-- 본문 섹션 -->
+      <!-- INDEX BODY -->
       <div class="col-lg-7" id="indexBody">
 
-        <!-- 메인 배너 -->                       
-        <img src="./img/titleBanner.jpg" alt="titleBanner" class="img-rounded img-responsive titleBanner">           
-        <!-- 메인 배너 -->
+        <!-- MAIN BANNER -->
+        <img src="./img/titleBanner.jpg" alt="titleBanner" class="img-rounded img-responsive titleBanner">
+        <!-- MAIN BANNER -->
 
         {% if login %}
-        <!-- 모달 토글 버튼 -->
+        <!-- MODAL TOGGLE BUTTON -->
         <hr>
         <button class="btn btn-default btn-block" data-toggle="modal" data-target="#addCurencyModal"><i class="fa fa-mail-forward"></i> &nbsp;&nbsp;노냥 보내기</button>
-        <!-- 모달 토글 버튼 -->
+        <!-- MODAL TOGGLE BUTTON -->
         {% endif %}
 
-        <!-- 리스트 -->
+        <!-- PENDING SIGN-UP REQUEST LIST -->
+        <div id="signupRequestList">
+        </div>
+        <!-- PENDING SIGN-UP REQUEST LIST -->
+
+        <!-- TRANSACTION LIST -->
         <div id="transactionList">
         </div>
-        <!-- 리스트 -->
-      
-      </div>
-      <!-- 본문 섹션 -->
+        <!-- TRANSACTION LIST -->
 
-      <!-- 오른쪽 랭킹 섹션 -->
+      </div>
+      <!-- INDEX BODY -->
+
+      <!-- RANKING AT RIGHT -->
       <div class="col-lg-2">
 
         <div class="row">
-          <!-- 거래 랭킹 -->
+          <!-- NUMBER OF TRADE RAKNING -->
           <div class="col-lg-12 col-sm-6" id="tradeRank">
           </div>
-          <!-- 거래 랭킹 -->
+          <!-- NUMBER OF TRADE RAKNING -->
 
-          <!-- 노냥 랭킹 -->
+          <!-- AMOUNT OF POINT RANKING -->
           <div class="col-lg-12 col-sm-6" id="nonyangRank">
           </div>
-          <!-- 노냥 랭킹 -->
+          <!-- AMOUNT OF POINT RANKING -->
         </div>
 
       </div>
-      <!-- 오른쪽 랭킹 섹션 -->
+      <!-- RANKING AT RIGHT -->
      <div class="col-xs-12">
        <footer>
 

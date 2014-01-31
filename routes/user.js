@@ -263,6 +263,11 @@ exports.login = function (req, res) {
       return;
     }
 
+    if ( !user.approved ) {
+      errorHandler.sendErrorMessage('NOT_APPROVED_YET', res);
+      return;
+    }
+
     if ( userInfo.password !== decrypt(user.password) ) {
       errorHandler.sendErrorMessage('PASSWORD_NOT_MATCH', res);
       return;
@@ -276,6 +281,72 @@ exports.login = function (req, res) {
     };
 
     res.redirect('/');
+    return;
+  });
+};
+
+exports.pending = function (req, res) {
+  var user_id = req.session.user_id;
+
+  User.find({ 'recommender_id': user_id, 'approved': false }, function (err, users) {
+    if (err) throw err;
+
+    console.log('users:', users);
+
+    var result = {
+      'result': 'success',
+      'pendingRequests': users
+    };
+
+    res.render('users.pending.html', result);
+    return;
+  });
+};
+
+exports.approve = function (req, res) {
+  var user_id = req.session.user_id;
+  var requested_user_id = req.body.requested_user_id;
+
+  async.waterfall([
+    function (callback) {
+      User.findById(requested_user_id, function (err, user) {
+        if (err) throw err;
+
+        if (!user) {
+          errorHandler.sendErrorMessage('NO_USER_FOUND', res);
+          return;
+        }
+
+        if ( user.recommender_id.toString() !== user_id.toString() ) {
+          errorHandler.sendErrorMessage('NO_PERMISSION', res);
+          return;
+        }
+
+        callback(null);
+        return;
+      });
+    },
+
+    function (callback) {
+      User.findByIdAndUpdate(requested_user_id, {$set: { 'approved': true, 'updated_at': new Date() } }, function (err, user) {
+        if (err) throw err;
+
+        if ( !user ) {
+          errorHandler.sendErrorMessage('NO_USER_FOUND', res);
+          return;
+        }
+
+        callback(null, user);
+        return;
+      });
+    }
+  ], function (err, result) {
+    result = {
+      'result': 'success',
+      'user': result
+    };
+
+    res.send(result);
     return;
   });
 };

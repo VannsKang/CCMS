@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block head %}
+  {% parent %}
+  <script type="text/javascript">
+  $(document).ready(function() {
+    $('.approval').on('click', function () {
+      if ( !confirm('회원가입을 승인하시겠습니까?') ) {
+        return;
+      }
+
+      user_id = $(this).data('id');
+      $.ajax({
+        url: '/admin/users/approve',
+        type: 'POST',
+        data: { 'user_id': user_id }
+      }).done(function (data) {
+        if ( data.result !== 'success' ) {
+          alert(data);
+          return;
+        }
+        alert('회원가입을 승인하였습니다.');
+        window.location = '/admin/users';
+        return;
+      }).fail(function (error) {
+        alert(error);
+        return;
+      });
+    });
+  });
+  </script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+
+    <div class="row">
+      <div class="col-xs-12">
+        <h3>회원 가입자 명단</h3>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover text-center">
+            <thead class="alert alert-info">
+              <tr>
+                <td>가입날짜</td>
+                <td>이름</td>
+                <td>이메일주소</td>
+                <td>고유번호</td>
+                <td>추천인</td>
+                <td>상태</td>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td>{{ user.created_at|date('Y년 m월 d일', '-540') }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.id }}</td>
+                {% if user.recommender %}
+                <td>{{ user.recommender.name }}</td>
+                {% else %}
+                <td style="color: lightgray;">없음</td>
+                {% endif %}
+                {% if user.approved %}
+                <td><button class="btn btn-xs btn-success disabled">승인됨</button></td>
+                {% else %}
+                <td><button class="btn btn-xs btn-info approval" data-id="{{ user.id }}">승인</button></td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -21,6 +21,7 @@ var form = require('./routes/form');
 var category = require('./routes/category');
 var transaction = require('./routes/transaction');
 var ranking = require('./routes/ranking');
+var admin = require('./routes/admin');
 
 // Utilities
 var config = require('./config');
@@ -54,7 +55,7 @@ if ('development' == app.get('env')) {
 }
 
 // login check
-var loginRequired = function (req, res, next) {
+var checkLoginMiddleware = function (req, res, next) {
   if ( req.session.user_id === undefined ) {
     res.redirect('/login');
     return;
@@ -80,10 +81,12 @@ db.once('open', function callback () {
   app.get('/users/all', user.listAll);
   app.post('/users/create', user.create);
   app.post('/users/delete', user.delete);
-
+  app.get('/users/pending', checkLoginMiddleware, user.pending);
+  app.post('/users/approve', checkLoginMiddleware, user.approve);
   app.post('/users/edit', user.edit);
-  // app.get('/editInfo', user.editInfo);
+
   app.get('/editForm', user.editForm);
+  // app.get('/editInfo', user.editInfo);;
 
   // FORM
   app.get('/form/login', form.login);
@@ -98,16 +101,20 @@ db.once('open', function callback () {
   app.get('/transaction/personal', transaction.personal);
   app.get('/transaction/public', transaction.public);
   app.get('/transaction/count', transaction.count);
-  app.post('/transaction/create', loginRequired, transaction.create);
-  app.post('/transaction/approve', loginRequired, transaction.approve);
-  app.post('/transaction/refusal', loginRequired, transaction.refusal);
+  app.post('/transaction/create', checkLoginMiddleware, transaction.create);
+  app.post('/transaction/approve', checkLoginMiddleware, transaction.approve);
+  app.post('/transaction/refusal', checkLoginMiddleware, transaction.refusal);
 
   // RANKING
   app.get('/ranking/nonyangRank', ranking.nonyangRank);
   app.get('/ranking/tradeRank', ranking.tradeRank);
 
   // ETC.
-  app.get('/update/wallet', util.updateAllWallets);
+  // app.get('/update/wallet', util.updateAllWallets);
+
+  // ADMIN
+  app.get('/admin/users', admin.users);
+  app.post('/admin/users/approve', admin.usersApproval);
 
   http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
