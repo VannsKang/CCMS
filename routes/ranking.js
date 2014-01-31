@@ -38,11 +38,11 @@ exports.tradeRank = function (req, res) {
         }
       ];
 
-      Transaction.aggregate(aggregateQuery, function (err, result) {
+      Transaction.aggregate(aggregateQuery, function (err, ranks) {
         if (err) throw err;
 
-        console.log('result:', result);
-        callback(null, result);
+        console.log('tradeRanks:', ranks);
+        callback(null, ranks);
         return;
       });
     },
@@ -64,7 +64,6 @@ exports.tradeRank = function (req, res) {
         return;
       });
     }
-
   ], function (err, result) {
     if (err) throw err;
 
@@ -103,11 +102,11 @@ exports.nonyangRank = function (req, res) {
         }
       ];
 
-      Transaction.aggregate(aggregateQuery, function (err, result) {
+      Transaction.aggregate(aggregateQuery, function (err, ranks) {
         if (err) throw err;
 
-        console.log('result:', result);
-        callback(null, result);
+        console.log('ranks:', ranks);
+        callback(null, ranks);
         return;
       });
     },

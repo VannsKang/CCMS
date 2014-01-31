@@ -131,7 +131,9 @@ exports.refusal = function (req, res) {
     },
 
     function compareUserToTransaction (user, transaction, callback) {
-      if ( user._id.toString() !== transaction.receiver_id.toString() ) {
+      var permission_check = ( user._id.toString() === transaction.receiver_id.toString() || user._id.toString() === transaction.sender_id.toString() );
+
+      if ( !permission_check ) {
         req.errorHandler.sendErrorMessage('NO_PERMISSION', res);
         return;
       }
@@ -179,30 +181,59 @@ exports.list = function (req, res) {
 
   async.waterfall([
     function (callback) {
-      // Check pending transaction list
-      Transaction.find({ 'receiver_id': user_id, 'approved': false }, function (err, transactions) {
+      // Check pending transaction to user list
+      Transaction.find({ 'receiver_id': user_id, 'approved': false }, function (err, pendings_to_user) {
         if (err) {
           throw err;
         }
 
-        console.log('transactions:', transactions);
+        console.log('pendings_to_user:', pendings_to_user);
 
-        if ( transactions.length === 0 )  {
-          result.transactions = transactions;
-          res.render('./transaction/index', result);
+        if ( pendings_to_user.length === 0 )  {
+          callback(null, []);
+          // res.render('./transaction/index', result);
           return;
         }
 
-        callback(null, transactions);
+        result.pendings_to_user = pendings_to_user;
+
+        callback(null, pendings_to_user);
         return;
       });
     },
+
+    getNameFromTransactions,
+
+    function (pendings_to_user, callback) {
+      // Check pending transaction from user list
+      Transaction.find({ 'sender_id': user_id, 'approved': false }, function (err, pendings_from_user) {
+        if (err) {
+          throw err;
+        }
+
+        console.log('pendings_from_user:', pendings_from_user);
+
+        if ( pendings_from_user.length === 0 )  {
+          callback(null, []);
+          return;
+        }
+
+        result.pendings_from_user = pendings_from_user;
+
+        callback(null, pendings_from_user);
+        return;
+      });
+    },
+
     getNameFromTransactions
+
   ], function (err, transactions) {
     if (err) {
       throw err;
     }
-    result.transactions = transactions;
+
+    console.log('transaction results:', result);
+    // result.transactions = transactions;
     res.render('./transaction/index', result);
     return;
   });
@@ -466,20 +497,33 @@ exports.count = function (req, res) {
         callback(null, receivedSum - sentSum);
         return;
       });
+    },
+
+    function updateUserWallet (summary, callback ) {
+      User.findByIdAndUpdate(user_id, { 'wallet': summary }, function (err, user) {
+        console.log('user:', user);
+        callback(null, user);
+        return;
+      });
     }
-  ], function (err, totalAmount) {
+  ], function (err, user) {
     if (err) {
       throw err;
     }
-    console.log('totalAmount:', totalAmount);
+    console.log('user.wallet:', user.wallet);
 
-    result.wallet = totalAmount;
+    result.wallet = user.wallet;
     res.send(result);
     return;
   });
 };
 
 var getNameFromTransactions = function (transactions, callback) {
+  if ( transactions.length === 0 ) {
+    callback(null, []);
+    return;
+  }
+
   async.map(transactions, function (transaction, mapCallback) {
     async.parallel([
       function getSenderName (done) {

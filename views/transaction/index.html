@@ -10,6 +10,11 @@
     });
 
     $('.approval').on('click', function () {
+
+      if ( !confirm('거래를 승인하시겠습니까?') ) {
+        return;
+      }
+
       transaction_id = $(this).attr('data');
       $.ajax({
         url: '/transaction/approve',
@@ -30,8 +35,11 @@
     });
 
     $('.refusal').on('click', function () {
+      if ( !confirm('거래를 취소하시겠습니까?') ) {
+        return;
+      }
+
       transaction_id = $(this).attr('data');
-      
       $.ajax({
         url: '/transaction/refusal',
         type: 'POST',
@@ -43,7 +51,7 @@
         }
         alert('거래를 취소하셨습니다.');
         window.location = '/';
-        return;        
+        return;
       }).fail(function (error) {
         alert(error);
         return;
@@ -54,16 +62,16 @@
 </script>
 <style type="text/css">
   .transactionDesc {
-    white-space:nowrap; 
+    white-space:nowrap;
     max-width: 200px;
     overflow: hidden;
     text-overflow:ellipsis;
-  }; 
+  };
 </style>
 
-{% if transactions.length > 0 %}
+{% if pendings_to_user.length > 0 %}
 <ul class="nav nav-tabs" id="watingChart">
-  <li><a href="#waiting" data-toggle="tab">대기 교환 내역</a></li>
+  <li><a href="#waiting" data-toggle="tab">내가 승인해야할 내역</a></li>
 </ul>
 
 <div class="tab-content">
@@ -77,7 +85,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for transaction in transactions %}
+          {% for transaction in pendings_to_user %}
           <tr>
             <td>{{ transaction.created_at|date('Y-m-d', '-540') }}</td>
             <td>{{ transaction.sender.name }}</td>
@@ -85,6 +93,40 @@
             <td class="transactionDesc">{{ transaction.description }}</td>
             <td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td>
             <td><button data="{{ transaction.id }}" class="btn btn-xs btn-warning approval">승인</button>&nbsp;&nbsp;&nbsp;<button data="{{ transaction.id }}" class="btn btn-xs btn-default refusal">취소</button></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <!-- 대기 거래 그래표 내용 -->
+  </div>
+</div>
+{% endif %}
+
+{% if pendings_from_user.length > 0 %}
+<ul class="nav nav-tabs" id="watingChart">
+  <li><a href="#waiting" data-toggle="tab">내가 보낸 내역</a></li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane fade in active" id="waiting">
+    <!-- 대기 거래 그래표 내용 -->
+    <div class="table-responsive">
+      <table class="table table-hover table-condensed text-center">
+        <thead>
+          <tr class="success">
+            <td>날짜</td><td>냥 받는 이</td><td>카테고리</td><td>내용</td><td>거래한 노냥</td><td>거래확인</td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for transaction in pendings_from_user %}
+          <tr>
+            <td>{{ transaction.created_at|date('Y-m-d', '-540') }}</td>
+            <td>{{ transaction.receiver.name }}</td>
+            <td>{{ transaction.category.name }}</td>
+            <td class="transactionDesc">{{ transaction.description }}</td>
+            <td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td>
+<td><button data="{{ transaction.id }}" class="btn btn-xs btn-danger refusal">취소</button></td>
           </tr>
           {% endfor %}
         </tbody>
