@@ -119,6 +119,7 @@ db.once('open', function callback () {
   // ADMIN
   app.get('/admin/users', checkAdminLogin, admin.users);
   app.post('/admin/users/approve', checkAdminLogin, admin.usersApproval);
+  app.get('/admin/transactions', checkAdminLogin, admin.transactions);
 
   http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
