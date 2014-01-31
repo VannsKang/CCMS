@@ -2,15 +2,12 @@
   $(document).ready(function () {
     $('#personalPrev').on('click', function (data) {
       if ( personalSkip <= 0 ) {
-        // $('.pagerWarningText').remove();
-        // $('<p class="h3 pagerWarningText"> 첫페이지입니다 </p>').prependTo('.pagerWarningContext');
-        // $('.pagerWarning').modal('show');
         alert('첫페이지입니다');
         return;
       }
 
       personalSkip--;
-      $('#personal').load('/transaction/personal?skip='+skip+'', function (data) {
+      $('#personal').load('/transaction/personal?skip='+personalSkip+'', function (data) {
       });
     });
 
@@ -29,35 +26,49 @@
 </script>
 <style type="text/css">
   .transactionDesc {
-    white-space:nowrap; 
+    white-space:nowrap;
     max-width: 200px;
     overflow: hidden;
     text-overflow:ellipsis;
-  }; 
+  };
 </style>
 
-{% if personalTransactions.length > 0 %}
 <!-- 개인 거래그래표 내용 -->
 <div class="table-responsive">
   <table class="table table-striped table-hover table-condensed text-center">
     <thead>
       <tr class="success">
-        <td>날짜</td><td>냥 주는 이</td><td>냥 받는 이</td><td>카테고리</td><td>내용</td><td>거래한 노냥</td>
-    </thead>
+        <td>날짜</td>
+        <td>냥 주는 이</td>
+        <td>냥 받는 이</td>
+        <td>카테고리</td>
+        <td>내용</td>
+        <td>거래한 노냥</td>
       </tr>
+    </thead>
     <tbody>
+      {% if personalTransactions.length > 0 %}
+
       {% for transaction in personalTransactions %}
-      <tr><td>{{ transaction.created_at|date('Y-m-d', '-540') }}</td><td>{{ transaction.sender.name }}</td><td>{{ transaction.receiver.name }}</td><td>{{ transaction.category.name }}</td><td class="transactionDesc">{{ transaction.description }}</td><td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td></tr>
+      <tr>
+        <td>{{ transaction.created_at|date('Y-m-d', '-540') }}</td>
+        <td>{{ transaction.sender.name }}</td>
+        <td>{{ transaction.receiver.name }}</td>
+        <td>{{ transaction.category.name }}</td>
+        <td class="transactionDesc">{{ transaction.description }}</td>
+        <td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td>
+      </tr>
       {% endfor %}
+
+      {% else %}
+      <tr>
+        <td colspan="6">더이상 거래 내역이 없습니다.</td>
+      </tr>
+      {% endif %}
     </tbody>
   </table>
 </div>
 <!-- 개인 거래그래표 내용 -->
-{% else %}
-<div>
-  <p>개인 거래 내역이 아직 없거나 로그인하지 않았습니다.</p>
-</div>
-{% endif %}
 
 <!-- 차트 페이지 넘기기 -->
 <ul class="pager">

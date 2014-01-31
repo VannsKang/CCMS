@@ -21,6 +21,9 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var errorHandler = require('../lib/errorHandler');
 var util = require('../lib/util');
 
+
+// USERS
+
 exports.users = function (req, res) {
   User.find({}, function (err, users) {
     if (err) throw err;
@@ -50,6 +53,22 @@ exports.usersApproval = function (req, res) {
     };
 
     res.send(result);
+    return;
+  });
+};
+
+// TRANSACTIONS
+
+exports.transactions = function (req, res) {
+  Transaction.find({}, function (err, transactions) {
+    if (err) throw err;
+
+    var result = {
+      'result': 'success',
+      'transactions': transactions
+    };
+
+    res.render('admin.transactions.html', result);
     return;
   });
 };
