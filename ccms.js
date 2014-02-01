@@ -27,6 +27,7 @@ var admin = require('./routes/admin');
 var config = require('./config');
 var errorHandler = require('./lib/errorHandler');
 var util = require('./lib/util');
+var model = require('./lib/model');
 
 var app = express();
 
@@ -56,7 +57,7 @@ if ('development' == app.get('env')) {
 
 // login check
 var checkLogin = function (req, res, next) {
-  if ( req.session.user_id === undefined ) {
+  if ( !req.session.user_id ) {
     res.redirect('/login');
     return;
   }
@@ -65,7 +66,31 @@ var checkLogin = function (req, res, next) {
 };
 
 var checkAdminLogin = function (req, res, next) {
-  next();
+  if ( !req.session.user_id ) {
+    res.redirect('/admin/login');
+    return;
+  }
+
+  var User = require('./lib/model.js').User;
+  var admins = config.admins;
+
+  User.find({ $or: admins }, function (err, admins) {
+    if (err) throw err;
+
+    var isAdminLoggedIn = false;
+    for ( var i in admins ) {
+      if ( req.session.user_id.toString() === admins[i]._id.toString() ) {
+        isAdminLoggedIn = true;
+      }
+    }
+
+    if ( !isAdminLoggedIn ) {
+      res.redirect('/');
+      return;
+    }
+
+    next();
+  });
 };
 
 mongoose.connect('mongodb://localhost/nonyang', { user: config.mongoose.username, pass: config.mongoose.password });
@@ -117,7 +142,9 @@ db.once('open', function callback () {
   // app.get('/update/wallet', util.updateAllWallets);
 
   // ADMIN
-  app.get('/admin', admin.index);
+  app.get('/admin', checkAdminLogin, admin.index);
+  app.get('/admin/login', admin.loginForm);
+  app.post('/admin/login', admin.login);
   app.get('/admin/users', checkAdminLogin, admin.users);
   app.post('/admin/users/approve', checkAdminLogin, admin.usersApproval);
   app.post('/admin/users/delete', checkAdminLogin, admin.usersDelete);

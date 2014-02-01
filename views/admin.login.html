@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block title %}My Page{% endblock %}
+
+{% block head %}
+  {% parent %}
+  <link rel="stylesheet" href="./css/signin.css">
+{% endblock %}
+
+{% block content %}
+<!-- LOGIN -->
+<div class="container">
+  <form class="form-signin" role="form" action="/admin/login" method="POST">
+    <h2 class="form-signin-heading">Administrator Only</h2>
+    <input name="email" type="text" class="form-control" placeholder="Email address" required autofocus>
+    <input name="password" type="password" class="form-control" placeholder="Password" required>
+    <label class="checkbox">
+      <input type="checkbox" value="remember-me"> Remember me
+    </label>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+  </form>
+</div><!-- LOGIN -->
+{% endblock %}

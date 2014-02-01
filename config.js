@@ -1,5 +1,7 @@
 module.exports = {
 
+  admins: [ 'colus001@me.com', 'studionodac@gmail.com' ],
+
   mongoose: {
     username: 'nonyang',
     password: 'nolmennolmen'

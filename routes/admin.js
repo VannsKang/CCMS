@@ -18,6 +18,8 @@ var Transaction = require('../lib/model.js').Transaction;
 
 // Utilities
 var ObjectId = require('mongoose').Types.ObjectId;
+var encrypt = require('../lib/util.js').encrypt;
+var decrypt = require('../lib/util.js').decrypt;
 var errorHandler = require('../lib/errorHandler');
 var util = require('../lib/util');
 
@@ -25,6 +27,36 @@ var util = require('../lib/util');
 exports.index = function (req, res) {
   res.render('admin.html');
   return;
+};
+
+exports.loginForm = function (req, res) {
+  res.render('admin.login.html');
+  return;
+};
+
+exports.login = function (req, res) {
+  var userInfo = {
+    'email': req.body.email,
+    'password': req.body.password
+  };
+
+  User.findOneAndUpdate({ 'email': userInfo.email }, { 'updated_at': new Date() }, function (err, user) {
+    if (err) throw err;
+
+    if ( !user ) {
+      errorHandler.sendErrorMessage('NO_USER_FOUND', res);
+      return;
+    }
+
+    if ( userInfo.password !== decrypt(user.password) ) {
+      errorHandler.sendErrorMessage('PASSWORD_NOT_MATCH', res);
+      return;
+    }
+
+    req.session.user_id = user._id;
+    res.redirect('/admin');
+    return;
+  });
 };
 
 
