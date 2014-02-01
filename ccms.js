@@ -120,6 +120,7 @@ db.once('open', function callback () {
   app.get('/admin', admin.index);
   app.get('/admin/users', checkAdminLogin, admin.users);
   app.post('/admin/users/approve', checkAdminLogin, admin.usersApproval);
+  app.post('/admin/users/delete', checkAdminLogin, admin.usersDelete);
   app.get('/admin/transactions', checkAdminLogin, admin.transactions);
 
   http.createServer(app).listen(app.get('port'), function(){

@@ -11,7 +11,8 @@
         return;
       }
 
-      user_id = $(this).data('id');
+      var user_id = $(this).data('id');
+
       $.ajax({
         url: '/admin/users/approve',
         type: 'POST',
@@ -22,6 +23,31 @@
           return;
         }
         alert('회원가입을 승인하였습니다.');
+        window.location = '/admin/users';
+        return;
+      }).fail(function (error) {
+        alert(error);
+        return;
+      });
+    });
+
+    $('.delete').on('click', function () {
+      if ( !confirm('한번 삭제한 회원은 되돌릴 수 없습니다. 계속하시겠습니까?') ) {
+        return;
+      }
+
+      var user_id = $(this).data('id');
+
+      $.ajax({
+        url: '/admin/users/delete',
+        type: 'POST',
+        data: { 'user_id': user_id }
+      }).done(function (data) {
+        if ( data.result !== 'success' ) {
+          alert(data);
+          return;
+        }
+        alert('회원이 삭제되었습니다.');
         window.location = '/admin/users';
         return;
       }).fail(function (error) {
@@ -51,6 +77,7 @@
                 <td>고유번호</td>
                 <td>추천인</td>
                 <td>상태</td>
+                <td></td>
               </tr>
             </thead>
             <tbody>
@@ -71,6 +98,7 @@
                 {% else %}
                 <td><button class="btn btn-xs btn-info approval" data-id="{{ user.id }}">승인</button></td>
                 {% endif %}
+                <td><button class="btn btn-xs btn-danger delete" data-id="{{ user.id }}">삭제</button></td>
               </tr>
             {% endfor %}
             </tbody>

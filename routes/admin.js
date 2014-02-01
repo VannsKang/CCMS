@@ -85,6 +85,25 @@ exports.usersApproval = function (req, res) {
   });
 };
 
+exports.usersDelete = function (req, res) {
+  User.findByIdAndRemove(req.body.user_id, function (err, user) {
+    if (err) throw err;
+
+    if ( !user ) {
+      errorHandler.sendErrorMessage('NO_USER_FOUND', res);
+      return;
+    }
+
+    var result = {
+      'result': 'success',
+      'user': user
+    };
+
+    res.send(result);
+    return;
+  });
+};
+
 // TRANSACTIONS
 
 exports.transactions = function (req, res) {
@@ -140,7 +159,6 @@ exports.transactions = function (req, res) {
     return;
   });
 };
-
 
 
 
