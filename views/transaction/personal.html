@@ -56,7 +56,7 @@
         <td>{{ transaction.receiver.name }}</td>
         <td>{{ transaction.category.name }}</td>
         <td class="transactionDesc">{{ transaction.description }}</td>
-        <td class="text-right">{{ transaction.amountPoint }} <em>냥</em></td>
+        <td class="text-right">{{ transaction.amountPoint }} <em>냥</em>{% if !transaction.approved %}&nbsp;&nbsp;<button class="btn btn-xs btn-warning">대기</button>{% endif %}</td>
       </tr>
       {% endfor %}
 

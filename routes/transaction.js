@@ -265,8 +265,7 @@ exports.personal = function (req, res) {
   async.waterfall([
     function (callback) {
       Transaction.find({
-          $or: [ { 'sender_id': user_id }, { 'receiver_id': user_id } ],
-         'approved': true
+          $or: [ { 'sender_id': user_id }, { 'receiver_id': user_id } ]
        }, null, queryOption, function (err, transactions) {
         if (err) {
           throw err;
