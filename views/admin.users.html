@@ -74,6 +74,7 @@
                 <td>가입날짜</td>
                 <td>이름</td>
                 <td>이메일주소</td>
+                <td>보유노냥</td>
                 <td>고유번호</td>
                 <td>추천인</td>
                 <td>상태</td>
@@ -87,6 +88,7 @@
                 <td>{{ user.created_at|date('Y년 m월 d일', '-540') }}</td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
+                <td>{{ user.wallet }}</td>
                 <td>{{ user.id }}</td>
                 {% if user.recommender %}
                 <td>{{ user.recommender.name }}</td>

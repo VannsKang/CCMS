@@ -251,6 +251,8 @@ exports.login = function (req, res) {
     'password': req.body.password
   };
 
+  console.log('userInfo:', userInfo);
+
   User.findOneAndUpdate({ 'email': userInfo.email }, { 'updated_at': new Date() }, function (err, user) {
 
     if (err) {

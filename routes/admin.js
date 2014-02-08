@@ -61,11 +61,14 @@ exports.login = function (req, res) {
 
 
 // USERS
-
 exports.users = function (req, res) {
+  var option = {
+    sort: { 'created_at': -1 }
+  };
+
   async.waterfall([
     function (callback) {
-      User.find({}, function (err, users) {
+      User.find({}, null, option, function (err, users) {
         if (err) throw err;
 
         callback(null, users);
@@ -153,6 +156,9 @@ exports.transactions = function (req, res) {
 };
 
 exports.transactions = function (req, res) {
+  var option = {
+    sort: { 'created_at': -1 }
+  };
   var result = {
     'result': 'success'
   };
@@ -160,7 +166,7 @@ exports.transactions = function (req, res) {
   async.waterfall([
     function (callback) {
       // Check pending transaction to user list
-      Transaction.find({}, function (err, transactions) {
+      Transaction.find({}, null, option, function (err, transactions) {
         if (err) {
           throw err;
         }
